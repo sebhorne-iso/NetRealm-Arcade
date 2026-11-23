@@ -808,7 +808,16 @@ export const LINUX = {
       case 'id':
         return jump ? 'uid=1000(netops) gid=1000(netops) groups=1000(netops),27(sudo)' : 'uid=0(root) gid=0(root) groups=0(root)';
       case 'date':
+        if (args[0] === '-s') {
+          if (jump) return 'date: cannot set date: Operation not permitted';
+          if (h.cpuHog) {
+            h.cpuHog = false;
+            W.dirty = true;
+          }
+        }
         return new Date(Date.UTC(1995, 0, 1) + W.time.t * 60000).toUTCString().replace('GMT', 'UTC');
+      case 'top':
+        return [`top - ${fmtDate(W.time.t, 'datetime').slice(11)}:00 up 41 days,  1 user,  load average: ${h.cpuHog ? '31.84, 30.02, 24.11' : '0.08, 0.04, 0.01'}`, `Tasks: 142 total,   ${h.cpuHog ? 9 : 1} running, 141 sleeping`, `%Cpu(s): ${h.cpuHog ? '97.8 us,  2.2 sy' : ' 1.3 us,  0.7 sy'},  0.0 ni, ${h.cpuHog ? ' 0.0' : '97.9'} id`, '', '    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND', h.cpuHog ? '   1187 www-data  20   0 2101432 884320  10412 R 389.4  10.8 412:08.33 java' : '   1187 www-data  20   0  141432  10432   7012 S   0.3   0.1   0:12.33 nginx', h.cpuHog ? '    912 root      20   0  412088  21004  12044 R  98.1   0.3 101:47.12 mysqld' : '    912 root      20   0  412088  21004  12044 S   0.1   0.3   1:47.12 mysqld'].join('\n');
       case 'uptime':
         return ` ${fmtDate(W.time.t, 'datetime').slice(11)}:00 up ${upLong(W.time.t % 90000).replace(/, \d+ minutes?$/, '')},  1 user,  load average: 0.08, 0.04, 0.01`;
       case 'uname':

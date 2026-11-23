@@ -102,6 +102,25 @@ function transitFor(world, a, b) {
   return d.transit[key];
 }
 
+// Edge <-> firewall links use public /30s so the firewall's outside address can be used for PAT
+function publicTransitFor(world, a, b) {
+  const d = world.design;
+  d.ptransit = d.ptransit || {};
+  const key = [a, b].sort().join('|');
+  if (!d.ptransit[key]) {
+    const used = new Set(Object.values(d.ptransit).map((x) => x.net));
+    for (const base of [248, 252, 240, 244]) {
+      const net = `${PUBLIC}.${base}`;
+      if (!used.has(net)) {
+        const [lo, hi] = [a, b].sort();
+        d.ptransit[key] = { net, [lo]: `${PUBLIC}.${base + 1}`, [hi]: `${PUBLIC}.${base + 2}` };
+        break;
+      }
+    }
+  }
+  return d.ptransit[key];
+}
+
 // Port pools: downlinks from the bottom, uplinks from the fastest/highest ports
 function portPool(dev) {
   const m = model(dev.model);
@@ -290,7 +309,8 @@ export function provision(world) {
     e.cfg.ifs[loName] = { ...newIf('lo'), ip: `${loFor(world, e.id)}/32`, desc: 'Router ID' };
     const myIsps = edges.length === 1 ? isps : isps.filter((_, j) => j === i);
     for (const isp of myIsps) {
-      const serial = yearOf(world.time.t) < 2003 && expandPorts(model(e.model)).some((p) => p.media === 'serial');
+      const hasSerial = expandPorts(model(e.model)).some((p) => p.media === 'serial');
+      const serial = hasSerial && (yearOf(world.time.t) < 2003 || portPool(e).length < 2);
       const p = allocPort(world, e, `isp:${isp.id}`, { up: !serial, serial });
       const ifc = e.cfg.ifs[p];
       setRouted(ifc, `${isp.ours}/30`);
@@ -314,7 +334,7 @@ export function provision(world) {
   if (fw) {
     fw.cfg.fw = { pol: [], vip: [], snat: [], zones: { outside: [], inside: [] } };
     edges.forEach((e) => {
-      const t = transitFor(world, e.id, fw.id);
+      const t = publicTransitFor(world, e.id, fw.id);
       const pe = allocPort(world, e, `down:${fw.id}`, { up: true });
       const pf = allocPort(world, fw, `up:${e.id}`, { up: true });
       routedPair(world, e, pe, fw, pf, t, `to-${fw.hostname}`, `to-${e.hostname}`);

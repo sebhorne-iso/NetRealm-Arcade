@@ -804,6 +804,11 @@ export function walk(world, src, dst, opts = {}) {
         }
       }
       if (h.ip === pkt.dst && !cur.origin) {
+        // leap-second style CPU hog: the box answers, slowly and not always
+        if (h.cpuHog) {
+          loss += 35;
+          rtt += 900;
+        }
         if (pkt.proto === 'tcp' && pkt.dport && !(h.listen || []).includes(pkt.dport)) return fail(`port ${pkt.dport} closed`, h.id);
         return { ok: true, hops, reason: 'delivered', at: h.id, loss, rtt, linksUsed, xlat, pkt };
       }
@@ -901,6 +906,8 @@ export function walk(world, src, dst, opts = {}) {
     const nxt = (S.bySeg.get(outEp.seg) || []).find((e) => e.ip === nhIp && e.up && e !== outEp);
     if (!nxt) return fail(r.nh ? `next hop ${r.nh} unreachable` : 'destination host unreachable (no ARP reply)', dev.id);
     loss += segLoss(S, outEp.seg);
+    // worm outbreak: links towards the ISPs are saturated unless the worm's port is filtered
+    if (world.worm && nxt.host && H[nxt.host]?.kind === 'isp' && !world.worm.blocked) loss += 70;
     l2links(world, outEp, nxt, linksUsed);
     if (nxt.host) {
       const h = H[nxt.host];
@@ -1052,11 +1059,14 @@ function reachFromDev(world, dev, ip, srcIp) {
 // Monitoring checks
 export function checks(world) {
   if (world.dirty || !world.sim) compute(world);
+  // results only change when the network is recomputed; reuse them until then
+  if (world.sim._checks) return world.sim._checks.map((c) => ({ ...c }));
   const out = [];
   const H = world.hosts;
   const nms = Object.values(H).find((h) => h.role === 'nms');
   const add = (c) => out.push(c);
   for (const c of world.design.customers) {
+    if (c.pending) continue;
     for (const hid of c.servers) {
       const h = H[hid];
       if (!h) continue;
@@ -1068,7 +1078,8 @@ export function checks(world) {
       const r = isp ? inboundWeb(world, isp, c.vip) : { ok: false, reason: 'no ISP' };
       add({ id: `web:${c.id}`, cust: c.id, kind: 'web', name: `${c.name} website (HTTPS ${c.vip})`, target: c.vip, ...r });
     }
-    const web = H[c.servers[0]];
+    // outbound test from the last server (the web server may have its own static NAT)
+    const web = H[c.servers[c.servers.length - 1]];
     if (web) {
       const r = two(world, { host: web.id }, '8.8.8.8', {});
       add({ id: `out:${c.id}`, cust: c.id, kind: 'out', name: `${c.name} internet access`, target: '8.8.8.8', ...r });
@@ -1082,11 +1093,17 @@ export function checks(world) {
     const r = two(world, { host: jump.id }, ip, {});
     add({ id: `mgmt:${dev.id}`, dev: dev.id, kind: 'mgmt', name: `${dev.hostname} management (${ip})`, target: ip, ...r });
   }
+  for (const c of out) {
+    const loss = Math.round(c.loss || 0);
+    if (c.ok && loss >= 25) Object.assign(c, { ok: false, reason: `timeouts (${Math.min(100, loss)}% packet loss)` });
+    else if (c.ok && loss >= 5) Object.assign(c, { degraded: true, reason: `${loss}% packet loss` });
+  }
   if (world.design.office.on && world.sim.wifi.clients) {
     const c = world.sim.wifi.clients;
     add({ id: 'wifi:clients', kind: 'wifi', name: `Office Wi-Fi "${c.ssid || '-'}"`, ok: c.dhcp, reason: c.dhcp ? 'clients online' : c.why, loss: c.dhcp ? 0 : 100 });
   }
-  return out;
+  world.sim._checks = out;
+  return out.map((c) => ({ ...c }));
 }
 
 // Two-way reachability (forward + return)
