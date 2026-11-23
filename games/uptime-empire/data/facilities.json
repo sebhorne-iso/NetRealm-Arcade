@@ -1,0 +1,34 @@
+{
+  "_note": "Facility equipment. Prices are in-game dollars; years are approximate availability.",
+  "floor": { "slots": 16, "startSlots": 4, "slotPrice": 6000, "cols": 8 },
+  "power": { "pricePerKwh": 0.11, "pue": 1.7, "voltage": 230 },
+  "rentPerRackMonth": 380,
+  "racks": [
+    { "id": "rack42", "name": "42U four-post rack", "u": 42, "price": 1400, "year": 1990 }
+  ],
+  "pdus": [
+    { "id": "pdu16", "name": "16 A basic PDU pair (A+B feeds)", "amps": 16, "price": 600, "year": 1990 },
+    { "id": "pdu32", "name": "32 A metered PDU pair (A+B feeds)", "amps": 32, "price": 1500, "year": 2004 }
+  ],
+  "ups": [
+    { "id": "ups3", "name": "3 kVA line-interactive UPS", "kw": 2.7, "minutes": 15, "price": 2800, "year": 1990 },
+    { "id": "ups20", "name": "20 kVA online double-conversion UPS", "kw": 18, "minutes": 14, "price": 19000, "year": 1997 },
+    { "id": "ups80", "name": "80 kVA modular UPS", "kw": 72, "minutes": 12, "price": 62000, "year": 2008 }
+  ],
+  "cooling": [
+    { "id": "split5", "name": "Split air-conditioner (5 kW)", "kw": 5, "price": 4500, "year": 1990 },
+    { "id": "crac30", "name": "CRAC unit (30 kW)", "kw": 30, "price": 36000, "year": 1995 },
+    { "id": "inrow40", "name": "In-row cooler (40 kW)", "kw": 40, "price": 41000, "year": 2008 }
+  ],
+  "generators": [
+    { "id": "gen60", "name": "60 kVA diesel generator (8 h tank)", "kw": 54, "hours": 8, "price": 48000, "year": 1990 }
+  ],
+  "spares": [
+    { "id": "psu", "name": "Spare power supply", "price": 350 },
+    { "id": "fan", "name": "Spare fan tray", "price": 180 },
+    { "id": "optic", "name": "Spare optic + fibre cleaning kit", "price": 140 },
+    { "id": "cable", "name": "Patch cable", "price": 9 }
+  ],
+  "ispFeeMonth": { "1995": 1500, "2005": 1100, "2015": 700, "2025": 500 },
+  "staffMonth": { "1995": 3500, "2005": 5500, "2015": 7500, "2025": 9000 }
+}

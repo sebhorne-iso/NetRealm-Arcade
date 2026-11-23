@@ -6,6 +6,19 @@
   },
   "games": [
     {
+      "id": "uptime-empire",
+      "title": "Uptime Empire",
+      "description": "A datacentre tycoon from a 1995 garage to a hyperscale campus. Rack real-era Cisco, Juniper, HP/Aruba and Fortinet gear, sign customers and keep their SLAs - then troubleshoot real outages in faithful IOS, NX-OS, ASA, IOS XR, Junos, AOS-CX, AOS-Switch, ArubaOS and FortiOS command lines, write root-cause analyses and survive history's worst network days.",
+      "thumbnail": "games/uptime-empire/thumbnail.png",
+      "icon": "🏢",
+      "color": "#7fd0ff",
+      "genre": "Tycoon / Sim",
+      "players": "1",
+      "tags": ["CCNA", "CCNP", "JNCIA", "Troubleshooting", "Cisco", "Juniper", "Aruba", "Fortinet", "OSPF", "BGP"],
+      "added": "2026-11-23",
+      "featured": true
+    },
+    {
       "id": "packet-quest",
       "title": "Packet Quest: The Great Outage",
       "description": "A retro RPG where every battle is a question. Fight through nine zones of CCNA / Network+ networking, Linux, Git & CI/CD, network automation, containers and IaC, with spaced repetition, a Codex, daily quests and a two-player Quiz Duel.",
