@@ -50,6 +50,30 @@ export function findAbsolutePaths(root, gameDir) {
   return problems;
 }
 
+// GitHub Pages' Jekyll build runs Liquid on Markdown files without front matter (via
+// jekyll-optional-front-matter), except these names. A stray "{{" or "{%" there breaks the deploy.
+const JEKYLL_MD_EXEMPT = new Set(['readme', 'license', 'licence', 'copying', 'code_of_conduct', 'contributing', 'issue_template', 'pull_request_template']);
+
+export function findLiquidInMarkdown(root) {
+  const problems = [];
+  const visit = (dir) => {
+    for (const name of readdirSync(dir)) {
+      if (name.startsWith('.') || name.startsWith('_') || name === 'node_modules') continue; // Jekyll skips these
+      const p = join(dir, name);
+      if (statSync(p).isDirectory()) visit(p);
+      else if (/\.(md|markdown)$/i.test(name) && !JEKYLL_MD_EXEMPT.has(name.replace(/\.[^.]+$/, '').toLowerCase())) {
+        readFileSync(p, 'utf8')
+          .split('\n')
+          .forEach((line, i) => {
+            if (/\{\{|\{%/.test(line)) problems.push(`${relative(root, p)}:${i + 1}: contains "{{" or "{%", which Jekyll (GitHub Pages) treats as Liquid and can fail the deploy; reword it or wrap the text in {% raw %}...{% endraw %}`);
+          });
+      }
+    }
+  };
+  visit(root);
+  return problems;
+}
+
 export function validateCatalog(root) {
   const errors = [];
   const warnings = [];
@@ -86,6 +110,8 @@ export function validateCatalog(root) {
     if (g.featured !== undefined && typeof g.featured !== 'boolean') errors.push(`${where}: "featured" must be true or false`);
     if (existsSync(dir)) errors.push(...findAbsolutePaths(root, dir));
   });
+
+  errors.push(...findLiquidInMarkdown(root));
 
   const gamesDir = join(root, 'games');
   if (existsSync(gamesDir)) {

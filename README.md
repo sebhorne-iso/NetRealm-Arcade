@@ -50,7 +50,7 @@ One-time setup: repo **Settings → Pages → Build and deployment → Source: G
 
 **Custom domain:** add your domain under **Settings → Pages → Custom domain** and point your DNS at GitHub (a `CNAME` record to `<user>.github.io` for a subdomain, or GitHub's `A`/`AAAA` records for an apex domain), then tick **Enforce HTTPS**. All links in the arcade are relative, so it works at a custom domain's root and under `/<repo>/` alike.
 
-**Jekyll notes:** Jekyll skips files and folders whose names start with `_` or `.`, and it runs Liquid (`{{ }}`, `{% %}`) on Markdown files. Avoid both in game folders. Game ids can't start with `_` (the scaffolder enforces this), and JSON/JS/HTML files without front matter are copied untouched.
+**Jekyll notes:** Jekyll skips files and folders whose names start with `_` or `.`, so game ids can't start with `_` (the scaffolder enforces this). It also runs Liquid template tags (double curly braces, or a curly brace followed by a percent sign) inside Markdown files, except ones named README, CONTRIBUTING, LICENSE and similar. `npm run validate` flags any Markdown file that would trip this. JSON, JS and HTML files without front matter are copied untouched.
 
 ## 🧪 Checks
 

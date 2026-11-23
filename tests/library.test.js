@@ -91,6 +91,20 @@ test('absolute paths inside a game are flagged; relative and protocol-relative o
   assert.ok(problems.some((p) => p.includes('style.css:1')));
 });
 
+test('Liquid syntax in Markdown that Jekyll would process is flagged; exempt names are not', () => {
+  const root = sandbox([{ id: 'docs', title: 'D', description: 'd' }]);
+  addGameFolder(root, 'docs');
+  writeFileSync(join(root, 'games', 'docs', 'notes.md'), '# Notes\nUse ${{ secrets.TOKEN }} here\n');
+  writeFileSync(join(root, 'games', 'docs', 'README.md'), 'README is exempt: {% raw %}\n');
+  writeFileSync(join(root, 'games', 'docs', 'plain.md'), 'Nothing special here.\n');
+  mkdirSync(join(root, '_drafts'));
+  writeFileSync(join(root, '_drafts', 'skip.md'), 'Jekyll ignores underscore folders: {{ x }}\n');
+  const { errors } = validateCatalog(root);
+  const liquid = errors.filter((e) => e.includes('Liquid'));
+  assert.equal(liquid.length, 1, liquid.join('\n'));
+  assert.ok(liquid[0].startsWith('games/docs/notes.md:2'));
+});
+
 test('slugify makes folder-safe ids', () => {
   assert.equal(slugify('Packet Quest: The Great Outage!'), 'packet-quest-the-great-outage');
   assert.equal(slugify('  Subnet   Sprint  '), 'subnet-sprint');
