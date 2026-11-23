@@ -4,36 +4,50 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0b1e">
-  <meta name="description" content="Packet Quest: The Great Outage. A retro RPG for studying networking (CCNA / Network+), Linux, Git, CI/CD, network automation, containers and IaC.">
-  <title>Packet Quest: The Great Outage</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%230b0b1e'/%3E%3Crect x='1' y='1' width='6' height='4' fill='%234db8ff'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='5' y='2' width='1' height='1' fill='%23fff'/%3E%3Crect x='3' y='5' width='2' height='2' fill='%23ffd447'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="A library of retro study games for networking, DevOps and automation.">
+  <title>NetRealm Arcade</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%230b0b1e'/%3E%3Crect x='1' y='1' width='6' height='4' fill='%23f0802a'/%3E%3Crect x='2' y='2' width='4' height='2' fill='%237fd0ff'/%3E%3Crect x='3' y='5' width='2' height='2' fill='%23ffd447'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="shared/arcade.css">
+  <link rel="stylesheet" href="hub/hub.css">
 </head>
-<body>
-  <div id="app" aria-live="polite">
-    <div class="boot">
-      <div class="boot-logo">PACKET<br>QUEST</div>
-      <p class="boot-msg" id="boot-msg">Booting NetRealm&hellip;</p>
-    </div>
-  </div>
-  <div id="toasts" aria-live="polite"></div>
-  <div id="modal-root"></div>
+<body class="arcade-body hub">
+  <div class="hub-stars" aria-hidden="true"></div>
+
+  <header class="hub-header">
+    <h1 class="hub-logo" id="hub-logo"><span class="logo-a">NETREALM</span><span class="logo-b">ARCADE</span></h1>
+    <p class="hub-tagline" id="hub-tagline"></p>
+    <p class="hub-coin" aria-hidden="true">INSERT COIN ▸ PICK A GAME</p>
+  </header>
+
+  <section class="hub-continue" id="hub-continue" hidden></section>
+
+  <section class="hub-controls" aria-label="Find a game">
+    <input class="hub-search" id="hub-search" type="search" placeholder="Search games…  (press /)" autocomplete="off" aria-label="Search games">
+    <div class="hub-tags" id="hub-tags" role="group" aria-label="Filter by topic"></div>
+  </section>
+
+  <p class="hub-count" id="hub-count" aria-live="polite"></p>
+  <main class="game-grid" id="game-grid">
+    <p class="hub-loading">Loading the arcade…</p>
+  </main>
+
+  <footer class="hub-footer" id="hub-footer"></footer>
 
   <script>
-    // Plain script so it still runs when ES modules can't load (e.g. opened via file://).
+    // Plain script so it still runs when the module can't load (e.g. opened via file://).
     (function () {
       var showHelp = function () {
-        var el = document.getElementById('boot-msg');
-        if (!el || window.__PQ_BOOTED__) return;
-        el.innerHTML = 'The game could not start.<br><br>' +
+        if (window.__ARCADE_BOOTED__) return;
+        var grid = document.getElementById('game-grid');
+        grid.innerHTML = '<div class="hub-error arcade-window">The arcade could not start.<br><br>' +
           (location.protocol === 'file:'
-            ? 'Browsers block game data when a page is opened straight from disk. Start a tiny local server in this folder instead:<br><br><code>python3 -m http.server 8000</code><br><br>then open <code>http://localhost:8000</code>.'
-            : 'Please use a modern browser (Chrome, Edge, Firefox or Safari) with JavaScript enabled.');
+            ? 'Browsers block the game catalog when a page is opened straight from disk. Start a tiny local server in this folder instead:<br><br><code>python3 -m http.server 8000</code><br><br>then open <code>http://localhost:8000</code>.'
+            : 'Please use a modern browser (Chrome, Edge, Firefox or Safari) with JavaScript enabled.') + '</div>';
       };
       window.addEventListener('error', function () { setTimeout(showHelp, 50); });
       setTimeout(showHelp, 4000);
     })();
   </script>
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="hub/hub.js"></script>
 </body>
 </html>

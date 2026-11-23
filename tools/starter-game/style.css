@@ -1,0 +1,15 @@
+/* Styles just for __GAME_TITLE__. Shared fonts and colors come from ../../shared/arcade.css. */
+* { box-sizing: border-box; }
+body { display: flex; justify-content: center; padding: 60px 16px 30px; }
+.starter { width: min(720px, 100%); }
+.starter-progress { color: var(--arcade-muted); margin: 18px 0 4px; }
+.starter-question { font-family: var(--arcade-body); font-weight: normal; font-size: 1.3em; margin: 6px 0 14px; }
+.starter-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.starter-choices .arcade-btn { font-family: var(--arcade-body); font-size: 20px; text-align: left; }
+.starter-choices .arcade-btn:disabled { opacity: 0.55; cursor: default; }
+.starter-choices .arcade-btn.right { background: #1d6a3a; opacity: 1; }
+.starter-choices .arcade-btn.wrong { background: #7a1c2c; opacity: 1; }
+.starter-feedback { margin: 14px 0; padding: 10px 12px; border-radius: 6px; background: rgba(0, 0, 0, 0.3); }
+.starter-feedback.good strong { color: var(--arcade-good); }
+.starter-feedback.bad strong { color: var(--arcade-bad); }
+@media (max-width: 560px) { .starter-choices { grid-template-columns: 1fr; } }

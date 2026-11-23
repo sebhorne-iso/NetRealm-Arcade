@@ -1,120 +1,108 @@
-# Contributing questions & content
+# Contributing to NetRealm Arcade
 
-Thanks for helping your study group level up! Most contributions are **new questions**. They're plain JSON, so no coding is needed.
+There are two ways to help:
 
-## Where things live
+- **Add a new game** to the arcade (this guide).
+- **Add questions to Packet Quest**: see [`games/packet-quest/CONTRIBUTING.md`](games/packet-quest/CONTRIBUTING.md).
 
-| File | What it holds |
-|------|---------------|
-| `data/questions/01-fundamentals.json` … `08-cloud.json` | The question bank, one file per zone |
-| `data/codex.json` | Study notes shown in the in-game Codex |
-| `data/zones.json` | Zones, monsters, bosses and story text |
+## Adding a game, step by step
 
-The final zone (*The Core*) automatically draws from every other zone, so it has no file of its own.
+### 1. Scaffold it
 
-## Question format
-
-Every question needs a unique `id`, a `type`, a `topic` (used by the weak-spot stats), a `difficulty` (1 = easy, 2 = medium, 3 = hard), the question text `q` and an `explain`ation that is shown after the player answers, right or wrong. Explanations are what make the game a study tool, so make them teach something!
-
-You can use `` `code` `` and `**bold**` inside text.
-
-### Multiple choice (`mc`)
-
-```json
-{
-  "id": "rt-099",
-  "type": "mc",
-  "difficulty": 2,
-  "topic": "OSPF",
-  "q": "Which OSPF area is the backbone?",
-  "choices": ["Area 0", "Area 1", "Area 51", "Area 255"],
-  "answer": 0,
-  "explain": "Area 0 is the backbone; all other areas must connect to it."
-}
-```
-
-`answer` is the index of the correct choice. Choices are shuffled in game, so put the correct one wherever you like. Add `"noShuffle": true` if the order matters (e.g. Yes/No).
-
-### Typed answer (`input`)
-
-```json
-{
-  "id": "sub-099",
-  "type": "input",
-  "difficulty": 2,
-  "topic": "Subnetting",
-  "q": "How many usable hosts are in a /27?",
-  "answers": ["30"],
-  "placeholder": "number",
-  "explain": "32 − 27 = 5 host bits → 2^5 − 2 = 30."
-}
-```
-
-Matching ignores case, extra spaces and a trailing full stop, and numbers match numerically (`65,534` = `65534`). List every acceptable spelling in `answers`, or add regex `patterns` (they're anchored automatically).
-
-### Terminal (`terminal`)
-
-```json
-{
-  "id": "lx-099",
-  "type": "terminal",
-  "difficulty": 1,
-  "topic": "Navigation",
-  "host": "netrealm-srv01",
-  "prompt": "user@netrealm:~$",
-  "q": "List the files in the current directory.",
-  "answers": ["ls"],
-  "patterns": ["ls( -[a-z]+)?"],
-  "hint": "Two letters.",
-  "output": "notes.txt  scripts  backups",
-  "explain": "`ls` lists directory contents. Add -l for details and -a for hidden files."
-}
-```
-
-- `answers[0]` is shown as the correct answer when the player gets it wrong.
-- `patterns` accept command variants (flags in a different order, etc.).
-- `"ios": true` enables Cisco-style abbreviations, so `sh ip int br` matches `show ip interface brief` (IP addresses and numbers must still be exact).
-- A leading `sudo ` is forgiven automatically.
-- `output` is printed after a correct answer; `context` lines (optional) are shown above the prompt.
-
-### Ordering (`order`)
-
-```json
-{
-  "id": "fund-099",
-  "type": "order",
-  "difficulty": 1,
-  "topic": "DHCP",
-  "q": "Order the DHCP messages.",
-  "items": ["Discover", "Offer", "Request", "Acknowledge"],
-  "explain": "DORA!"
-}
-```
-
-Write `items` in the **correct** order (3–8 items). The game shuffles them.
-
-### Generated (`gen`)
-
-```json
-{ "id": "gen-sub-net-4", "type": "gen", "generator": "subnet-network", "difficulty": 3 }
-```
-
-Generators create a fresh question every time. Available generators: `subnet-network`, `subnet-broadcast`, `subnet-first-last`, `subnet-hosts`, `subnet-mask`, `subnet-prefix`, `subnet-fit`, `subnet-count`, `wildcard-mask`, `same-subnet`, `ip-class`, `ip-private`, `bin-to-dec`, `dec-to-bin`, `port-number`, `port-protocol` (see `js/engine/generators.js`).
-
-## Before you open a pull request
+From the repository's top folder:
 
 ```bash
-npm run validate
-npm test
+npm run new-game -- "Port Blaster" --icon 🚀 --color "#ff5c6c" --tags "Ports,Network+" --description "Blast the right port numbers before they reach your firewall!"
 ```
 
-The validator checks the JSON syntax, required fields, duplicate ids and regex patterns, and confirms that every listed answer is actually accepted by the game's answer checker. CI runs the same checks on every pull request.
+Only the title is required. Options:
 
-Then play your questions locally (`python3 -m http.server 8000`) to see how they look.
+| Option | Default | Meaning |
+|---|---|---|
+| `--id` | made from the title (`port-blaster`) | Folder name and URL: lowercase letters, numbers, dashes |
+| `--icon` | 🎮 | Emoji shown on the card (and as placeholder art) |
+| `--color` | `#7fd0ff` | Card accent color |
+| `--tags` | none | Comma-separated topics, used by the hub's filters |
+| `--description` | a placeholder | One or two sentences for the card |
 
-## Style tips
+This creates `games/port-blaster/` (a copy of `tools/starter-game/`) and appends the game's card to `games.json`.
 
-- Aim for exam-style accuracy (CCNA / Network+ level for networking zones).
-- Wrong choices should be plausible: common misconceptions make the best distractors.
-- Keep the tone friendly; puns are encouraged in monster descriptions and story text.
-- Avoid "All of the above" / "None of the above" since choices are shuffled.
+### 2. Build your game
+
+Edit the files in `games/<id>/`. The starter is a tiny working quiz (`index.html`, `main.js`, `style.css`) so you can see how it fits together. Replace it with whatever you like: canvas, DOM, a library you vendor into the folder, anything static.
+
+**The four arcade rules** (the validator enforces the first one):
+
+1. **Relative paths only.** Write `css/style.css`, `data/levels.json`, `../../shared/arcade.css`, never `/css/style.css`. The site may live under `/<repo>/` on github.io *or* at a custom domain's root, and absolute paths break one of them.
+2. **Keep a way home.** Include the back link to the hub: `<a class="arcade-back" href="../../">◀ Arcade</a>` (styled by `shared/arcade.css`), or your own button that goes to `../../`.
+3. **Namespace your saves.** Every game shares the browser's `localStorage` on the same domain, so prefix keys with your game id, e.g. `arcade.port-blaster.v1` (the starter already does).
+4. **Stay inside your folder.** Everything your game needs lives in `games/<id>/`. It may *optionally* use `../../shared/` (fonts and retro styles); nothing else in the repo should depend on your game.
+
+### 3. Fill in the card
+
+Edit your entry in [`games.json`](games.json):
+
+```json
+{
+  "id": "port-blaster",
+  "title": "Port Blaster",
+  "description": "Blast the right port numbers before they reach your firewall!",
+  "thumbnail": "games/port-blaster/thumbnail.png",
+  "icon": "🚀",
+  "color": "#ff5c6c",
+  "genre": "Arcade",
+  "players": "1",
+  "tags": ["Ports", "Network+"],
+  "added": "2026-11-23",
+  "featured": false
+}
+```
+
+| Field | Required | Notes |
+|---|---|---|
+| `id` | ✔ | Must match the folder name `games/<id>/` |
+| `title` | ✔ | |
+| `description` | ✔ | Shown on the card; searchable |
+| `thumbnail` | recommended | 16:9 image (e.g. 640×360 PNG). Without one, the hub draws a placeholder from `icon` and `color` |
+| `icon`, `color` | | Emoji and `#rrggbb` accent |
+| `genre`, `players` | | Shown in the card footer, e.g. "RPG · 1–2 players" |
+| `tags` | | Topics for filtering (search and filters appear once there are 4+ games) |
+| `added` | | `YYYY-MM-DD`; cards get a **NEW** badge for 30 days |
+| `featured` | | `true` pins the game to the front |
+
+The order of games in `games.json` is the order in the hub (featured games first).
+
+### 4. Optional: tests and data checks
+
+- Put `*.test.js` files (Node's built-in `node:test`) in `games/<id>/tests/`. `npm test` finds them automatically.
+- If your game has data files (questions, levels...), add `games/<id>/tools/validate.mjs` that exits non-zero on problems. `npm run validate` and CI run it automatically.
+
+Packet Quest has examples of both.
+
+### 5. Check and preview
+
+```bash
+npm run check                 # validates games.json, your folder and all game data, then runs every test
+python3 -m http.server 8000   # then open http://localhost:8000 and click your card
+```
+
+### 6. Open a pull request
+
+Checklist:
+
+- [ ] `npm run check` passes
+- [ ] The game loads from the hub, and **◀ Arcade** returns to it
+- [ ] It works on a phone-sized screen (or the description says it's desktop-only)
+- [ ] There's a thumbnail
+- [ ] Optionally, a row in the README's games table
+
+## Adding a game by hand (no scaffolder)
+
+1. Create `games/<id>/index.html` (plus whatever else your game needs).
+2. Add an entry to `games.json` as above.
+3. Run `npm run check`.
+
+## Removing or renaming a game
+
+- **Remove:** delete `games/<id>/` and its entry in `games.json`.
+- **Rename:** the `id` is part of the URL, so changing it breaks old links and resets players' "last played" status. Prefer changing just the `title`.

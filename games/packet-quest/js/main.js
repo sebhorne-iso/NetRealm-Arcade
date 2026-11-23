@@ -184,7 +184,7 @@ async function boot() {
   } catch (e) {
     console.error(e);
     const msg = document.getElementById('boot-msg');
-    if (msg) msg.innerHTML = `Failed to load game data (${e.message}).<br><br>If you opened index.html directly from disk, run <code>python3 -m http.server 8000</code> in the game folder and open <code>http://localhost:8000</code>.`;
+    if (msg) msg.innerHTML = `Failed to load game data (${e.message}).<br><br>If you opened index.html directly from disk, run <code>python3 -m http.server 8000</code> in the repository's top folder and open <code>http://localhost:8000</code>.`;
     return;
   }
   window.PQ = game; // handy for debugging in the console

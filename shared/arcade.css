@@ -1,0 +1,93 @@
+/* Shared arcade look: pixel fonts, palette and a few building blocks.
+   Used by the hub and by the starter template. Games are free to ignore it.
+   Include from a game with: <link rel="stylesheet" href="../../shared/arcade.css"> */
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('fonts/press-start-2p.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'VT323';
+  src: url('fonts/vt323.woff2') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  --arcade-bg: #0b0b1e;
+  --arcade-win-top: #2b3595;
+  --arcade-win-bot: #141a5a;
+  --arcade-border: #e6e6f0;
+  --arcade-ink: #10102a;
+  --arcade-text: #f4f4ff;
+  --arcade-muted: #a8b0e0;
+  --arcade-gold: #ffd447;
+  --arcade-cyan: #7fd0ff;
+  --arcade-good: #47e07a;
+  --arcade-bad: #ff5c6c;
+  --arcade-accent: #f0802a;
+  --arcade-pixel: 'Press Start 2P', ui-monospace, monospace;
+  --arcade-body: 'VT323', ui-monospace, monospace;
+}
+
+.arcade-body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--arcade-bg) radial-gradient(ellipse at top, #1b1f55 0%, var(--arcade-bg) 65%) fixed;
+  color: var(--arcade-text);
+  font-family: var(--arcade-body);
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.arcade-window {
+  background: linear-gradient(180deg, var(--arcade-win-top), var(--arcade-win-bot));
+  border: 3px solid var(--arcade-border);
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px var(--arcade-ink), inset 0 0 0 2px var(--arcade-ink), 0 8px 0 3px rgba(0, 0, 0, 0.35);
+  padding: 16px;
+}
+
+.arcade-title {
+  font-family: var(--arcade-pixel);
+  color: var(--arcade-gold);
+  text-shadow: 3px 3px 0 var(--arcade-ink);
+  line-height: 1.4;
+}
+
+.arcade-btn {
+  font-family: var(--arcade-pixel);
+  font-size: 11px;
+  line-height: 1.5;
+  color: #fff;
+  background: var(--arcade-accent);
+  border: 3px solid var(--arcade-ink);
+  border-radius: 4px;
+  padding: 10px 14px;
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.35), inset 3px 3px 0 rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.arcade-btn:hover { filter: brightness(1.15); }
+.arcade-btn:active { transform: translateY(2px); }
+.arcade-btn:focus-visible, .arcade-back:focus-visible { outline: 3px solid var(--arcade-gold); outline-offset: 2px; }
+.arcade-btn.secondary { background: #3a46b8; }
+
+/* "◀ Arcade" link back to the hub. Put it as the first element in <body>. */
+.arcade-back {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  font-family: var(--arcade-pixel);
+  font-size: 9px;
+  color: #fff;
+  background: rgba(16, 16, 42, 0.85);
+  border: 2px solid var(--arcade-border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  text-decoration: none;
+}
+.arcade-back:hover { background: #2b3595; }
+
+.arcade-muted { color: var(--arcade-muted); }
