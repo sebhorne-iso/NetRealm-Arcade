@@ -1,0 +1,157 @@
+/* NetRealm Arcade hub styles (builds on shared/arcade.css) */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body.hub { padding: 0 16px 40px; overflow-x: hidden; }
+.hub a { color: var(--arcade-cyan); }
+.hub a.arcade-btn { color: #fff; text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5); }
+.hub code { background: rgba(0, 0, 0, 0.35); padding: 0 5px; border-radius: 3px; color: #9ef7b4; }
+
+.hub-stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(1px 1px at 20% 30%, #fff, transparent), radial-gradient(1px 1px at 70% 20%, #fff, transparent),
+    radial-gradient(2px 2px at 40% 70%, #9ab, transparent), radial-gradient(1px 1px at 85% 60%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 80%, #cdf, transparent), radial-gradient(2px 2px at 55% 15%, #ffd, transparent);
+  background-size: 300px 300px;
+  animation: hub-stars 70s linear infinite;
+}
+@keyframes hub-stars { to { background-position: 0 300px; } }
+
+/* ---------- header ---------- */
+.hub-header { text-align: center; padding: 36px 0 10px; }
+.hub-logo { font-family: var(--arcade-pixel); margin: 0; line-height: 1.15; }
+.hub-logo span { display: block; font-size: clamp(30px, 8vw, 68px); }
+.logo-a { color: var(--arcade-gold); text-shadow: 4px 4px 0 #c0392b, 8px 8px 0 var(--arcade-ink); }
+.logo-b { color: var(--arcade-cyan); text-shadow: 4px 4px 0 #2b3595, 8px 8px 0 var(--arcade-ink); }
+.hub-tagline { color: var(--arcade-muted); margin: 18px 0 6px; font-size: 1.1em; }
+.hub-coin { font-family: var(--arcade-pixel); font-size: clamp(9px, 2.2vw, 13px); color: #ff6b6b; letter-spacing: 2px; animation: hub-blink 1.4s steps(2) infinite; margin: 10px 0 0; }
+@keyframes hub-blink { 50% { opacity: 0.35; } }
+
+/* ---------- continue banner ---------- */
+.hub-continue {
+  max-width: 1100px;
+  margin: 18px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: rgba(255, 212, 71, 0.1);
+  border: 2px dashed var(--arcade-gold);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.continue-label { font-family: var(--arcade-pixel); font-size: 10px; color: var(--arcade-gold); }
+.continue-title { flex: 1; min-width: 180px; }
+
+/* ---------- controls ---------- */
+.hub-controls { max-width: 1100px; margin: 22px auto 0; display: grid; gap: 10px; }
+.hub-search {
+  width: 100%;
+  font: inherit;
+  color: #fff;
+  background: #0b0b1e;
+  border: 3px solid var(--arcade-ink);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 8px 12px;
+  outline: none;
+}
+.hub-search:focus { box-shadow: 0 0 0 2px var(--arcade-gold); }
+.hub-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-btn {
+  font-family: var(--arcade-pixel);
+  font-size: 8px;
+  line-height: 1.5;
+  color: var(--arcade-muted);
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.tag-btn:hover { color: #fff; border-color: #fff; }
+.tag-btn.active { color: var(--arcade-ink); background: var(--arcade-gold); border-color: var(--arcade-gold); }
+.tag-btn:focus-visible { outline: 3px solid var(--arcade-gold); outline-offset: 2px; }
+.hub-count { max-width: 1100px; margin: 16px auto 8px; color: var(--arcade-muted); font-size: 0.85em; }
+
+/* ---------- game grid ---------- */
+.game-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+.game-card {
+  --card-color: var(--arcade-cyan);
+  display: flex;
+  flex-direction: column;
+  color: var(--arcade-text) !important;
+  text-decoration: none;
+  background: linear-gradient(180deg, var(--arcade-win-top), var(--arcade-win-bot));
+  border: 3px solid var(--arcade-border);
+  border-radius: 10px;
+  box-shadow: 0 0 0 3px var(--arcade-ink), 0 8px 0 3px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.game-card:hover, .game-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 0 0 3px var(--arcade-ink), 0 0 0 6px var(--card-color), 0 0 28px 4px color-mix(in srgb, var(--card-color) 45%, transparent);
+  outline: none;
+}
+.card-art { position: relative; aspect-ratio: 16 / 9; background: #050512; border-bottom: 3px solid var(--arcade-ink); overflow: hidden; }
+.card-art img { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: pixelated; }
+.card-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 3px);
+}
+.card-art-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(45deg, rgba(0, 0, 0, 0.18) 25%, transparent 25% 75%, rgba(0, 0, 0, 0.18) 75%) 0 0 / 24px 24px,
+    linear-gradient(45deg, rgba(0, 0, 0, 0.18) 25%, transparent 25% 75%, rgba(0, 0, 0, 0.18) 75%) 12px 12px / 24px 24px,
+    radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--card-color) 70%, #fff), color-mix(in srgb, var(--card-color) 55%, #10102a));
+}
+.fallback-icon { font-size: 72px; filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.4)); }
+.card-badges { position: absolute; top: 8px; left: 8px; display: flex; gap: 6px; flex-wrap: wrap; z-index: 1; }
+.badge { font-family: var(--arcade-pixel); font-size: 7px; line-height: 1.4; padding: 4px 6px; border: 2px solid var(--arcade-ink); border-radius: 3px; color: var(--arcade-ink); }
+.badge-featured { background: var(--arcade-gold); }
+.badge-new { background: var(--arcade-good); }
+.badge-last { background: var(--arcade-cyan); }
+.card-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.card-title { font-family: var(--arcade-pixel); font-size: 12px; line-height: 1.6; color: var(--card-color); margin: 0; text-shadow: 2px 2px 0 var(--arcade-ink); }
+.card-desc { margin: 0; flex: 1; color: #e8ebff; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip { font-size: 0.75em; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 10px; padding: 1px 8px; color: var(--arcade-muted); }
+.card-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 4px; }
+.card-meta { color: var(--arcade-muted); font-size: 0.9em; }
+.card-plays { color: var(--arcade-muted); }
+.card-play { font-family: var(--arcade-pixel); font-size: 10px; color: var(--arcade-ink); background: var(--arcade-accent); border: 3px solid var(--arcade-ink); border-radius: 4px; padding: 7px 10px; white-space: nowrap; }
+.game-card:hover .card-play, .game-card:focus-visible .card-play { animation: hub-blink 0.7s steps(2) infinite; }
+
+.add-card { border-style: dashed; background: rgba(16, 20, 62, 0.6); }
+.add-plus { aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; font-family: var(--arcade-pixel); font-size: 64px; color: var(--arcade-muted); border-bottom: 3px dashed rgba(255, 255, 255, 0.2); }
+.add-card .card-play { align-self: flex-end; background: #3a46b8; color: #fff; }
+
+.hub-empty, .hub-loading { grid-column: 1 / -1; text-align: center; color: var(--arcade-muted); }
+.hub-error { grid-column: 1 / -1; max-width: 620px; margin: 0 auto; text-align: center; }
+
+/* ---------- footer ---------- */
+.hub-footer { max-width: 1100px; margin: 36px auto 0; text-align: center; color: var(--arcade-muted); font-size: 0.85em; }
+.hub-footer p { margin: 4px 0; }
+
+@media (max-width: 520px) {
+  body.hub { padding: 0 10px 30px; font-size: 20px; }
+  .game-grid { grid-template-columns: 1fr; gap: 18px; }
+  .hub-tags { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  .tag-btn { flex: none; }
+  .hub-header { padding-top: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-stars, .hub-coin, .game-card:hover .card-play { animation: none; }
+  .game-card { transition: none; }
+}

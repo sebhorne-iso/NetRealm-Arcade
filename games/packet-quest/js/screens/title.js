@@ -79,7 +79,9 @@ export function titleScreen(root, _params, game) {
           btn('🏆 Leaderboard', () => game.go('leaderboard')),
           btn('📥 Import Save', () => importDialog(game)),
           btn('⚙️ Settings', () => openSettings(game)),
-          btn('❔ How to Play', () => howToPlay())
+          btn('❔ How to Play', () => howToPlay()),
+          // Back to the game library hub at the site root (relative, so it works on any domain).
+          btn('🕹️ Arcade', () => { game.save(); location.href = '../../'; })
         )
       ),
       !store.isStorageOk() ? h('p.warn', {}, 'Warning: your browser is blocking local storage, so progress will not be saved. Use Profile → Export Save to back up.') : null,

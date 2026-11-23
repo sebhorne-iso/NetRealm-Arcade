@@ -1,0 +1,22 @@
+{
+  "site": {
+    "title": "NetRealm Arcade",
+    "tagline": "Study games for networking, DevOps & automation",
+    "repo": "https://github.com/sebhorne-iso/Networking-Devops-study-game"
+  },
+  "games": [
+    {
+      "id": "packet-quest",
+      "title": "Packet Quest: The Great Outage",
+      "description": "A retro RPG where every battle is a question. Fight through nine zones of CCNA / Network+ networking, Linux, Git & CI/CD, network automation, containers and IaC, with spaced repetition, a Codex, daily quests and a two-player Quiz Duel.",
+      "thumbnail": "games/packet-quest/thumbnail.png",
+      "icon": "⚔️",
+      "color": "#ffd447",
+      "genre": "RPG",
+      "players": "1–2",
+      "tags": ["CCNA", "Network+", "Subnetting", "Linux", "Git & CI/CD", "Automation", "Cloud"],
+      "added": "2026-11-23",
+      "featured": true
+    }
+  ]
+}
