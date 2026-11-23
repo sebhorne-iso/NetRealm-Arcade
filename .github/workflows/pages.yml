@@ -1,7 +1,6 @@
-# Validates the arcade catalog and every game's data, runs all tests, and deploys the arcade
-# (hub + every game) to GitHub Pages.
-# One-time setup: repo Settings → Pages → Build and deployment → Source: "GitHub Actions".
-name: Test & Deploy
+# Checks every pull request and every push to main: validates games.json, each game's folder
+# and data, and runs all tests. (Deploying to GitHub Pages is done by jekyll-gh-pages.yml.)
+name: Test
 
 on:
   push:
@@ -13,7 +12,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: test-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -29,28 +28,3 @@ jobs:
         run: npm run validate
       - name: Unit tests (arcade tooling + every game's tests/)
         run: npm test
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: test
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v5
-      - name: Assemble static site (hub + shared assets + all games)
-        run: |
-          mkdir _site
-          cp -r index.html 404.html games.json hub shared games _site/
-          touch _site/.nojekyll
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: _site
-      - id: deployment
-        uses: actions/deploy-pages@v4

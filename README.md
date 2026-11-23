@@ -41,15 +41,16 @@ Then open <http://localhost:8000>. (`npm start` runs the same command.)
 
 ## 🚀 Publish to GitHub Pages
 
-The workflow in [`.github/workflows/pages.yml`](.github/workflows/pages.yml) validates every game, runs all tests, and deploys the hub plus every game whenever `main` changes.
+Two workflows live in [`.github/workflows/`](.github/workflows/):
 
-1. Merge to `main`.
-2. Repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. The arcade appears at `https://<user>.github.io/<repo>/`, and each game at `…/games/<id>/`.
+- **`jekyll-gh-pages.yml`** builds the site with Jekyll and deploys it to GitHub Pages on every push to `main` (i.e. whenever a pull request is merged). Jekyll copies the hub and every game through unchanged.
+- **`pages.yml` ("Test")** validates every game and runs all tests on each pull request and push to `main`.
+
+One-time setup: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**. The arcade appears at `https://<user>.github.io/<repo>/`, and each game at `…/games/<id>/`.
 
 **Custom domain:** add your domain under **Settings → Pages → Custom domain** and point your DNS at GitHub (a `CNAME` record to `<user>.github.io` for a subdomain, or GitHub's `A`/`AAAA` records for an apex domain), then tick **Enforce HTTPS**. All links in the arcade are relative, so it works at a custom domain's root and under `/<repo>/` alike.
 
-**Using Jekyll's "Deploy from a branch" instead:** that also works (no paths start with `_`, and there's no Liquid syntax in the Markdown). In that mode, delete the `deploy:` job from the workflow so it doesn't fail, and keep the `test:` job.
+**Jekyll notes:** Jekyll skips files and folders whose names start with `_` or `.`, and it runs Liquid (`{{ }}`, `{% %}`) on Markdown files. Avoid both in game folders. Game ids can't start with `_` (the scaffolder enforces this), and JSON/JS/HTML files without front matter are copied untouched.
 
 ## 🧪 Checks
 
