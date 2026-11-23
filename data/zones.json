@@ -1,0 +1,319 @@
+{
+  "zones": [
+    {
+      "id": "fundamentals",
+      "name": "Packet Plains",
+      "topic": "Networking Fundamentals",
+      "icon": "📦",
+      "recLevel": 1,
+      "battlesToBoss": 4,
+      "questions": "01-fundamentals.json",
+      "map": { "x": 0.12, "y": 0.72 },
+      "biome": ["#4a9a3a", "#5cb048", "#3a7a2e"],
+      "desc": "Rolling green fields where frames graze and packets roam free. The basics live here: the OSI and TCP/IP models, encapsulation, ports and protocols, TCP vs UDP, Ethernet, MAC addresses and cabling.",
+      "intro": [
+        "Welcome to **Packet Plains**, where every journey begins... at Layer 1!",
+        "Incidents here test the fundamentals: the OSI model, TCP vs UDP, common ports, MAC addresses and cables. Remember: All People Seem To Need Data Processing.",
+        "Win 4 battles here and the OSI Overlord will rise to face you."
+      ],
+      "bossIntro": [
+        "RUMBLE... The ground splits open and a seven-layer stone golem rises from the plains!",
+        "OSI OVERLORD: 'Physical, Data Link... bah! No junior engineer has ever made it past my Presentation layer!'"
+      ],
+      "outro": [
+        "The OSI Overlord crumbles into a neat pile of headers and trailers.",
+        "Old Man Ping: 'Splendid! You know your layers. But knowing the layers is useless if you can't work out your own address...'",
+        "'The road east leads to **Subnet Swamp**. Bring a calculator. Actually, don't. Learn to do it in your head!'"
+      ],
+      "monsters": [
+        { "id": "packet-loss-phantom", "name": "Packet Loss Phantom", "sprite": "ghost", "palette": { "b": "#b0b8ff", "a": "#6a70c0" }, "desc": "Silently drops 1 in every 10 of your frames. TCP retransmissions are its natural enemy; UDP streams just stutter." },
+        { "id": "latency-leech", "name": "Latency Leech", "sprite": "bat", "palette": { "b": "#8a4fd6", "a": "#4a2080" }, "desc": "Clings to long-haul links and sucks milliseconds out of every round trip. Fears CDNs and edge caching." },
+        { "id": "duplex-goblin", "name": "Duplex Mismatch Goblin", "sprite": "imp", "palette": { "b": "#5ac85a", "a": "#2a7a2a" }, "desc": "One side says full duplex, the other says half. The result: late collisions, CRC errors and sadness." },
+        { "id": "jitter-bug", "name": "Jitter Bug", "sprite": "bug", "palette": { "b": "#40c0a0", "a": "#e0a030" }, "desc": "Makes packets arrive at uneven intervals so your VoIP call sounds like a robot underwater. QoS keeps it calm." },
+        { "id": "collision-crab", "name": "Collision Crab", "sprite": "crab", "palette": { "b": "#e07a3a", "a": "#a04a1a" }, "desc": "Lives on ancient hubs, where every port shares one collision domain. Switches give each port its own." },
+        { "id": "mtu-mimic", "name": "MTU Mimic", "sprite": "mimic", "palette": { "b": "#a0642a", "a": "#5a3a1a" }, "desc": "Looks like a normal frame but is one byte over the 1500-byte MTU. Fragments, or gets dropped, on contact." }
+      ],
+      "boss": { "id": "osi-overlord", "name": "The OSI Overlord", "sprite": "golem", "palette": { "b": "#9a8a7a", "a": "#4df0ff" }, "loot": "encap-cloak", "desc": "A seven-layer stone golem. Each layer adds its own header armor. Please Do Not Throw Sausage Pizza Away.", "taunts": ["Seven layers! SEVEN! You can't even name them in order!", "You dare strip my headers?! De-encapsulate THIS!"] }
+    },
+    {
+      "id": "subnetting",
+      "name": "Subnet Swamp",
+      "topic": "IP Addressing & Subnetting",
+      "icon": "🧮",
+      "recLevel": 3,
+      "battlesToBoss": 4,
+      "questions": "02-subnetting.json",
+      "map": { "x": 0.3, "y": 0.86 },
+      "biome": ["#3a5a3a", "#4f6a32", "#2a4a3a"],
+      "desc": "A foggy bog of overlapping address spaces. Master IPv4 addressing, binary, CIDR, subnet masks, VLSM, private ranges and IPv6. Expect endless randomly generated subnetting drills!",
+      "intro": [
+        "Ugh, **Subnet Swamp**. Every engineer gets lost here at least once.",
+        "Here you'll calculate network IDs, broadcasts, usable hosts and masks. Many questions are generated fresh every time, so you can't just memorize answers. You have to learn the method!",
+        "Tip: the block size (the 'magic number') is 256 minus the mask value in the interesting octet. The Codex has a full cheat sheet."
+      ],
+      "bossIntro": [
+        "The swamp water churns. Tentacles of every prefix length burst from the muck!",
+        "VLSM KRAKEN: 'Your address plan is MINE. Can you carve up a /22 without wasting a single host?'"
+      ],
+      "outro": [
+        "The Kraken sinks back into the swamp, neatly summarized into a single route.",
+        "Old Man Ping: 'You can subnet! Now let's see if you can actually move packets between those subnets.'",
+        "'Head north to **Routing Ridge**. Mind the loops; they get a bit... stormy.'"
+      ],
+      "monsters": [
+        { "id": "apipa-slime", "name": "APIPA Slime", "sprite": "slime", "palette": { "b": "#7ad0c0", "a": "#3a8070" }, "desc": "Spawns whenever DHCP fails and gives itself a 169.254.x.x address. Can only talk to other link-local slimes." },
+        { "id": "overlap-serpent", "name": "Overlapping Subnet Serpent", "sprite": "serpent", "palette": { "b": "#5aa05a", "a": "#d0e050" }, "desc": "Two subnets, one address space, infinite routing confusion. Careful planning starves it." },
+        { "id": "fencepost-fiend", "name": "Fencepost Fiend", "sprite": "imp", "palette": { "b": "#d06a3a", "a": "#7a2a1a" }, "desc": "Forgot to subtract 2 for the network and broadcast addresses. Off by one, forever." },
+        { "id": "broadcast-banshee", "name": "Broadcast Banshee", "sprite": "ghost", "palette": { "b": "#e0e0ff", "a": "#9090c0" }, "desc": "Screams to every host in the subnet at once. Thankfully, routers don't forward its wails." },
+        { "id": "classful-ghoul", "name": "Classful Ghoul", "sprite": "skull", "palette": { "b": "#d8d0b0", "a": "#4a8a4a" }, "desc": "Still lives in 1993. Refuses to accept CIDR and insists every 10.x.x.x network must be a /8." },
+        { "id": "exhaustion-wraith", "name": "IPv4 Exhaustion Wraith", "sprite": "eye", "palette": { "b": "#7a6aa0", "a": "#e0b040" }, "desc": "There are only about 4.3 billion IPv4 addresses and it wants all of them. NAT slows it down; IPv6 ends it." }
+      ],
+      "boss": { "id": "vlsm-kraken", "name": "The VLSM Kraken", "sprite": "hydra", "palette": { "b": "#3a8a7a", "a": "#e05a8a" }, "loot": "vlsm-compass", "desc": "Carves address space into tentacles of every size. Allocate your largest subnets first, or it will eat your address plan.", "taunts": ["A /26 for you, a /30 for you... and NOTHING left for your servers!", "My tentacles overlap! Your routes are ambiguous! Longest prefix... wait, what?!"] }
+    },
+    {
+      "id": "routing",
+      "name": "Routing Ridge",
+      "topic": "Switching & Routing",
+      "icon": "🔀",
+      "recLevel": 5,
+      "battlesToBoss": 4,
+      "questions": "03-routing.json",
+      "map": { "x": 0.44, "y": 0.62 },
+      "biome": ["#7a6a5a", "#8f8f8f", "#5a4a3a"],
+      "desc": "Craggy peaks where switches and routers wage war. VLANs, trunking, STP, MAC address tables, EtherChannel, static routes, OSPF, administrative distance, longest-prefix match and FHRPs.",
+      "intro": [
+        "**Routing Ridge!** Here Layer 2 meets Layer 3, and loops lurk behind every redundant link.",
+        "You'll face VLANs and trunks, spanning tree, routing tables, OSPF and administrative distance. Some battles drop you into a Cisco IOS terminal, and abbreviations like `sh ip ro` work!",
+        "Old switches never die. They just keep forwarding broadcasts."
+      ],
+      "bossIntro": [
+        "The trees around you begin to... converge. An ancient Ent unfolds its branches.",
+        "SPANNING TREE ENT: 'Hrrrm. Every path to me must be loop-free. I'll keep YOU in the blocking state forever!'"
+      ],
+      "outro": [
+        "The Ent's branches go quiet. Somewhere, a port moves from blocking to forwarding.",
+        "Old Man Ping: 'Splendid! Packets now flow loop-free across the ridge. But a network that works is a network that gets attacked...'",
+        "'**Firewall Fortress** lies to the west: DNS, DHCP, NAT and security. And remember, it's always DNS.'"
+      ],
+      "monsters": [
+        { "id": "broadcast-storm", "name": "Broadcast Storm", "sprite": "cloud", "palette": { "b": "#7a7a90", "a": "#ffd447" }, "desc": "Born when switches are looped without Spanning Tree. Every broadcast multiplies until the network melts." },
+        { "id": "mac-flooder", "name": "MAC Flooder", "sprite": "slime", "palette": { "b": "#c050c0", "a": "#702070" }, "desc": "Floods the CAM table with fake MAC addresses until the switch floods everything like a hub. Port security stops it." },
+        { "id": "native-vlan-vampire", "name": "Native VLAN Vampire", "sprite": "bat", "palette": { "b": "#a02030", "a": "#501018" }, "desc": "Feeds on mismatched native VLANs and double-tagged frames to hop between VLANs. Change your native VLAN from 1!" },
+        { "id": "routing-loop-wyrm", "name": "Routing Loop Wyrm", "sprite": "serpent", "palette": { "b": "#3a70c0", "a": "#ffd447" }, "desc": "Chases its own tail between two routers until the TTL hits zero." },
+        { "id": "black-hole-route", "name": "Black Hole Route", "sprite": "orb", "palette": { "b": "#2a1a4a", "a": "#8a40ff" }, "desc": "Packets go in. Nothing comes out. Probably a static route to Null0, or a next hop that doesn't exist." },
+        { "id": "flapping-link", "name": "Flapping Link Golem", "sprite": "robot", "palette": { "b": "#8899aa", "a": "#ff5050" }, "desc": "Up. Down. Up. Down. Every flap forces OSPF to reconverge. Check your cables and SFPs!" }
+      ],
+      "boss": { "id": "spanning-tree-ent", "name": "The Spanning Tree Ent", "sprite": "tree", "palette": { "b": "#7a5a3a", "a": "#3fa85a" }, "loot": "root-branch", "desc": "An ancient tree that blocks redundant paths to keep the forest loop-free. Elected root bridge thanks to the lowest bridge ID.", "taunts": ["I AM ROOT. My bridge ID is lower than yours will ever be!", "You... you're blocking MY ports?! Topology change! TOPOLOGY CHANGE!"] }
+    },
+    {
+      "id": "security",
+      "name": "Firewall Fortress",
+      "topic": "Network Services & Security",
+      "icon": "🏰",
+      "recLevel": 7,
+      "battlesToBoss": 4,
+      "questions": "04-security.json",
+      "map": { "x": 0.26, "y": 0.4 },
+      "biome": ["#8a3a2a", "#a3523d", "#6a2a2a"],
+      "desc": "A walled citadel defending the realm's core services: DNS, DHCP, NAT/PAT, NTP, ACLs, firewalls, VPNs, wireless and security fundamentals.",
+      "intro": [
+        "**Firewall Fortress**, where the realm's services are kept, and where attackers lurk outside the gates.",
+        "Expect DNS records, DHCP's DORA dance, NAT, ACLs and wildcard masks, Wi-Fi standards and classic attacks.",
+        "When in doubt: there's an implicit deny at the bottom, and it's always DNS."
+      ],
+      "bossIntro": [
+        "The sky darkens with a swarm of compromised IoT devices. A dragon descends on the fortress!",
+        "DDoS DRAGON: 'Your firewall can't stop a hundred thousand toasters. Prepare to be SYN FLOODED!'"
+      ],
+      "outro": [
+        "The botnet scatters as the dragon's command-and-control server goes offline.",
+        "Old Man Ping: 'The fortress holds! You now know networking from cable to firewall. CCNA-worthy, I'd say!'",
+        "'But modern engineers don't configure everything by hand. Descend into the **Linux Caverns**. Nearly every router, server and container runs on those ancient stones.'"
+      ],
+      "monsters": [
+        { "id": "rogue-dhcp", "name": "Rogue DHCP Server", "sprite": "robot", "palette": { "b": "#c04040", "a": "#ffd447" }, "desc": "Hands out evil default gateways to anyone who asks. DHCP snooping is its kryptonite." },
+        { "id": "arp-spoofer", "name": "ARP Spoofer", "sprite": "ghost", "palette": { "b": "#50c0a0", "a": "#207060" }, "desc": "Claims to own your default gateway's IP address. Dynamic ARP Inspection hates this one weird trick." },
+        { "id": "nxdomain", "name": "NXDOMAIN Skull", "sprite": "skull", "palette": { "b": "#e0e0e0", "a": "#ff4040" }, "desc": "The name you seek does not exist. Or maybe you just typo'd it." },
+        { "id": "phish-phantom", "name": "Phish Phantom", "sprite": "fish", "palette": { "b": "#3ab0e0", "a": "#ffa040" }, "desc": "Sends urgent emails from 'IT Supp0rt'. Your users are its favorite bait. Training and MFA defeat it." },
+        { "id": "pat-gnat", "name": "Port Exhaustion Gnat", "sprite": "bug", "palette": { "b": "#606060", "a": "#40a0ff" }, "desc": "Too many inside hosts, not enough PAT ports on one public IP. Add addresses to the NAT pool!" },
+        { "id": "brute-force-brute", "name": "Brute Force Brute", "sprite": "golem", "palette": { "b": "#8a6a4a", "a": "#ff5040" }, "desc": "Tries admin/admin 10,000 times per second. Account lockout and MFA make it cry." }
+      ],
+      "boss": { "id": "ddos-dragon", "name": "The DDoS Dragon", "sprite": "dragon", "palette": { "b": "#d63a4a", "a": "#602080" }, "loot": "scrubbing-shield", "desc": "Commands a botnet of 100,000 smart toasters. Its breath is pure SYN flood.", "taunts": ["Behold my botnet! A hundred thousand compromised IoT devices, and every one of them HATES you!", "You... you rate-limited me?! A SCRUBBING CENTER?! NOOOO!"] }
+    },
+    {
+      "id": "linux",
+      "name": "Linux Caverns",
+      "topic": "Linux & Bash",
+      "icon": "🐧",
+      "recLevel": 9,
+      "battlesToBoss": 4,
+      "questions": "05-linux.json",
+      "map": { "x": 0.12, "y": 0.16 },
+      "biome": ["#3a3a4c", "#4c4c5e", "#2a2a3a"],
+      "desc": "Deep tunnels where processes live and die. Navigate the filesystem, permissions, pipes and grep, processes and systemd, package managers and Linux networking commands.",
+      "intro": [
+        "Welcome to the **Linux Caverns**. It's dark down here, but you have a shell.",
+        "Many battles here are TERMINAL challenges: type real commands. `ls`, `grep`, `chmod`, `systemctl`, `ip`... the works.",
+        "If you get stuck, type `?` for a hint. And never run `rm -rf /` just to see what happens."
+      ],
+      "bossIntro": [
+        "The caverns go completely silent. Every process freezes mid-instruction.",
+        "KERNEL PANIC: 'Not syncing. Not responding. Not merciful. Prove you know your way around a shell, or be dumped to core!'"
+      ],
+      "outro": [
+        "The panic subsides. Somewhere, a system boots cleanly and journald writes a happy log line.",
+        "Old Man Ping: 'You've got shell skills now. Time to learn how teams ship changes without breaking everything.'",
+        "'To the **Pipeline Forge**! Git, CI/CD and YAML. Mind your indentation.'"
+      ],
+      "monsters": [
+        { "id": "zombie-process", "name": "Zombie Process", "sprite": "skull", "palette": { "b": "#9ac080", "a": "#c03030" }, "desc": "Its parent never called wait(), so it lingers in the process table as <defunct> forever." },
+        { "id": "fork-bomb", "name": "Fork Bomb", "sprite": "bomb", "palette": { "b": "#3a3a4a", "a": "#e0a030" }, "desc": ":(){ :|:& };: It copies itself until there are no PIDs left. Set process limits with ulimit!" },
+        { "id": "permission-gargoyle", "name": "Permission Denied Gargoyle", "sprite": "golem", "palette": { "b": "#6a6a7a", "a": "#ff3030" }, "desc": "chmod 000 incarnate. Guards files you swear you own." },
+        { "id": "orphan-process", "name": "Orphan Process", "sprite": "ghost", "palette": { "b": "#a0c0e0", "a": "#5070a0" }, "desc": "Its parent died, so init (PID 1, usually systemd) adopted it. It's fine. Mostly." },
+        { "id": "segfault-specter", "name": "Segfault Specter", "sprite": "eye", "palette": { "b": "#c0c0d0", "a": "#e03050" }, "desc": "Touched memory that wasn't theirs. Segmentation fault (core dumped)." },
+        { "id": "memory-leak-slime", "name": "Memory Leak Slime", "sprite": "slime", "palette": { "b": "#40a0e0", "a": "#205080" }, "desc": "Grows a few megabytes every hour until the OOM killer arrives." }
+      ],
+      "boss": { "id": "kernel-panic", "name": "The Kernel Panic", "sprite": "orb", "palette": { "b": "#400010", "a": "#ff3050" }, "loot": "core-dump-dagger", "desc": "When it wakes, everything stops. Last seen after someone loaded an unsigned kernel module on a Friday.", "taunts": ["Kernel panic - not syncing: Attempted to kill init! Your system is MINE!", "Rebooting in 10... 9... You'll never see a login prompt again!"] }
+    },
+    {
+      "id": "cicd",
+      "name": "Pipeline Forge",
+      "topic": "Git & CI/CD",
+      "icon": "⚒️",
+      "recLevel": 11,
+      "battlesToBoss": 4,
+      "questions": "06-cicd.json",
+      "map": { "x": 0.38, "y": 0.16 },
+      "biome": ["#7a3a1a", "#c0602a", "#4a2a1a"],
+      "desc": "Molten forges where code becomes deployments. Git commits, branches, merges and rebases, pull requests, CI/CD pipelines, GitHub Actions YAML and deployment strategies.",
+      "intro": [
+        "The **Pipeline Forge**! Here raw commits are hammered into releases.",
+        "You'll face Git commands, branching strategies, CI/CD concepts, GitHub Actions YAML and deployment patterns like blue/green and canary.",
+        "Rule #1 of the Forge: never force-push to main. Rule #2: see Rule #1."
+      ],
+      "bossIntro": [
+        "The forge erupts. A many-headed beast crawls out, each head a different version of the same file.",
+        "MERGE CONFLICT HYDRA: '<<<<<<< HEAD Your release is DOOMED ======= Your release is DOOMED!!! >>>>>>> main'"
+      ],
+      "outro": [
+        "The hydra's heads merge into one clean commit. CI goes green. Somewhere, a release manager weeps with joy.",
+        "Old Man Ping: 'Splendid! But pipelines are just the start. Why configure a thousand switches by hand when a script can do it?'",
+        "'Sail to **API Archipelago**, land of Python, REST, Ansible and controllers. That's on your CCNA too!'"
+      ],
+      "monsters": [
+        { "id": "detached-head", "name": "Detached HEAD", "sprite": "skull", "palette": { "b": "#d0d0c0", "a": "#4080ff" }, "desc": "A HEAD with no branch. Commits made here wander off into the void unless you create a branch for them." },
+        { "id": "flaky-test", "name": "Flaky Test", "sprite": "bat", "palette": { "b": "#e0c040", "a": "#806010" }, "desc": "Passes on Tuesdays. Fails when your manager is watching. Blind retries only feed it." },
+        { "id": "yaml-imp", "name": "YAML Indentation Imp", "sprite": "imp", "palette": { "b": "#e05050", "a": "#ffd447" }, "desc": "One space off and your whole pipeline is invalid. Tabs are its favorite snack." },
+        { "id": "leaked-secret", "name": "Leaked Secret Specter", "sprite": "ghost", "palette": { "b": "#ffd447", "a": "#806010" }, "desc": "An API key committed to a public repo in 2019. Scraper bots found it in four minutes. Use a secrets manager!" },
+        { "id": "works-on-my-machine", "name": "Works-On-My-Machine Mimic", "sprite": "mimic", "palette": { "b": "#6a7aa0", "a": "#ffd447" }, "desc": "Fine locally, on fire in CI. Containers and pinned dependency versions expose it." },
+        { "id": "dependency-hell", "name": "Dependency Hell Crab", "sprite": "crab", "palette": { "b": "#a03030", "a": "#ffa040" }, "desc": "Needs libfoo 1.2 AND libfoo 2.0 at the same time. Lockfiles keep it caged." }
+      ],
+      "boss": { "id": "merge-conflict-hydra", "name": "The Merge Conflict Hydra", "sprite": "hydra", "palette": { "b": "#c05030", "a": "#40c0ff" }, "loot": "rebase-ring", "desc": "<<<<<<< HEAD. Cut off one head and two more conflicts appear. Small, frequent merges starve it.", "taunts": ["<<<<<<< HEAD ======= >>>>>>> feature! Resolve THAT!", "You... rebased?! My heads... they're becoming... LINEAR?!"] }
+    },
+    {
+      "id": "automation",
+      "name": "API Archipelago",
+      "topic": "Network Automation & Programmability",
+      "icon": "🤖",
+      "recLevel": 13,
+      "battlesToBoss": 4,
+      "questions": "07-automation.json",
+      "map": { "x": 0.6, "y": 0.34 },
+      "biome": ["#d8c890", "#5aa0a0", "#3a8a6a"],
+      "desc": "Scattered islands connected only by APIs. Python for network engineers, JSON/YAML/XML, REST and HTTP, NETCONF/RESTCONF/YANG, Ansible, and controller-based networking and SDN.",
+      "intro": [
+        "Welcome to **API Archipelago**! These islands only talk through well-documented interfaces.",
+        "Here you'll tackle Python, data formats, REST APIs and HTTP status codes, NETCONF/RESTCONF, Ansible and SDN controllers. Much of this is on the CCNA's automation section!",
+        "Remember: if you do it twice, automate it. If you automate it, make it idempotent."
+      ],
+      "bossIntro": [
+        "On the last island stands a server older than some of your coworkers. It hums ominously.",
+        "SNOWFLAKE SERVER: 'Nobody knows how I'm configured. Not even me. Automate me? HA! Try it!'"
+      ],
+      "outro": [
+        "The snowflake melts and is reborn as cattle, not a pet: rebuilt from code in 90 seconds.",
+        "Old Man Ping: 'Magnificent. Your playbooks are idempotent and your APIs return 200 OK.'",
+        "'One region remains before the Core: **Cloud Citadel**. Containers, Kubernetes, Terraform and cloud networking. Pack a parachute.'"
+      ],
+      "monsters": [
+        { "id": "not-found-404", "name": "404 Not Found", "sprite": "ghost", "palette": { "b": "#c0c0c0", "a": "#606060" }, "desc": "It's... not here. Double-check the URL path and the API version." },
+        { "id": "rate-limiter", "name": "Rate Limiter Golem", "sprite": "golem", "palette": { "b": "#5a7a9a", "a": "#ffa040" }, "desc": "429 Too Many Requests. It politely asks you to back off. Then not so politely." },
+        { "id": "json-jelly", "name": "Malformed JSON Jelly", "sprite": "slime", "palette": { "b": "#f0a040", "a": "#a05010" }, "desc": "Trailing commas, single quotes and missing brackets. JSON parsers fear its wobble." },
+        { "id": "infinite-loop", "name": "Infinite Loop Ouroboros", "sprite": "serpent", "palette": { "b": "#40a060", "a": "#ffd447" }, "desc": "while True: pass. It never ends. Ctrl+C is its only weakness." },
+        { "id": "config-drift", "name": "Config Drift Eye", "sprite": "eye", "palette": { "b": "#8a8ac0", "a": "#40e0a0" }, "desc": "Someone SSH'd in and 'just changed one thing'. Now no two routers match. Source of truth + automation fixes it." },
+        { "id": "unauthorized-imp", "name": "401 Unauthorized Imp", "sprite": "imp", "palette": { "b": "#8040c0", "a": "#ffd447" }, "desc": "You forgot the token. Or the token expired. Or both." }
+      ],
+      "boss": { "id": "snowflake-server", "name": "The Snowflake Server", "sprite": "robot", "palette": { "b": "#c0e0ff", "a": "#4080ff" }, "loot": "idempotence-amulet", "desc": "Hand-configured for 7 years, utterly unique and terrifying to reboot. Infrastructure as code melts it.", "taunts": ["I have 4,000 lines of undocumented config and 2,555 days of uptime! You WOULDN'T DARE reboot me!", "No... not Ansible! My config... it's becoming... IDEMPOTENT!"] }
+    },
+    {
+      "id": "cloud",
+      "name": "Cloud Citadel",
+      "topic": "Containers, Kubernetes, IaC & Cloud",
+      "icon": "☁️",
+      "recLevel": 15,
+      "battlesToBoss": 4,
+      "questions": "08-cloud.json",
+      "map": { "x": 0.8, "y": 0.58 },
+      "biome": ["#b8c8e8", "#dde8ff", "#90a8d8"],
+      "desc": "A floating fortress above the clouds. Docker images and containers, Kubernetes basics, Terraform and infrastructure as code, cloud networking (VPCs, subnets, gateways, security groups) and service models.",
+      "intro": [
+        "**Cloud Citadel**: someone else's computer, but very well organized.",
+        "Here you'll battle container and Kubernetes problems, Terraform state, and cloud networking: VPCs, subnets, gateways and security groups.",
+        "Tip: `kubectl get pods` is to Kubernetes what `show ip interface brief` is to Cisco."
+      ],
+      "bossIntro": [
+        "The citadel shakes as a colossal beast inflates, replica after replica.",
+        "AUTOSCALING BEHEMOTH: 'CPU at 51%! Time to add another thousand nodes! Who's paying? YOU are!'"
+      ],
+      "outro": [
+        "The Behemoth scales down to a sensible three replicas. Finance sends you a fruit basket.",
+        "Old Man Ping: 'You've done it. Every region of the NetRealm is restored... except one.'",
+        "'At the heart of the realm lies **The Core**, where THE GREAT OUTAGE waits. Everything you've learned will be tested. Everything.'"
+      ],
+      "monsters": [
+        { "id": "crashloop", "name": "CrashLoopBackOff", "sprite": "slime", "palette": { "b": "#e04060", "a": "#801030" }, "desc": "Starts, crashes, waits. Starts, crashes, waits longer. Check `kubectl logs --previous`!" },
+        { "id": "oomkilled-ogre", "name": "OOMKilled Ogre", "sprite": "golem", "palette": { "b": "#7a9a5a", "a": "#ff4040" }, "desc": "Blew past its memory limit and got killed by the kernel. Exit code 137." },
+        { "id": "orphaned-volume", "name": "Orphaned Volume", "sprite": "ghost", "palette": { "b": "#90a0c0", "a": "#ffd447" }, "desc": "Still billing you per GB-month long after the VM was deleted. Tag your resources!" },
+        { "id": "imagepull-imp", "name": "ImagePullBackOff Imp", "sprite": "imp", "palette": { "b": "#4080e0", "a": "#ff8040" }, "desc": "A typo in the image tag, or a private registry without credentials." },
+        { "id": "state-drift", "name": "State Drift Specter", "sprite": "eye", "palette": { "b": "#a060c0", "a": "#40ffa0" }, "desc": "The Terraform state says one thing, reality says another. `terraform plan` reveals it." },
+        { "id": "open-sg-siren", "name": "Open Security Group Siren", "sprite": "fish", "palette": { "b": "#e05030", "a": "#ffd447" }, "desc": "0.0.0.0/0 allowed on port 22. Every bot on the internet has already found it." }
+      ],
+      "boss": { "id": "autoscaling-behemoth", "name": "The Autoscaling Behemoth", "sprite": "dragon", "palette": { "b": "#e0e0f0", "a": "#4080ff" }, "loot": "elastic-plate", "desc": "Scaled to 10,000 pods for a single request. Your cloud bill is now a phone number.", "taunts": ["Scale up! SCALE UP! Max replicas? I don't believe in limits!", "Resource quotas?! Budget alerts?! You're... RIGHT-SIZING me?!"] }
+    },
+    {
+      "id": "core",
+      "name": "The Core",
+      "topic": "Final Exam: Everything",
+      "icon": "💠",
+      "recLevel": 17,
+      "battlesToBoss": 3,
+      "pool": "all",
+      "map": { "x": 0.88, "y": 0.2 },
+      "biome": ["#3a1a5a", "#5a2a8a", "#1a0a2a"],
+      "desc": "The heart of the NetRealm's data center, consumed by THE GREAT OUTAGE. Questions come from every zone at medium and hard difficulty.",
+      "intro": [
+        "**The Core.** Racks stretch into darkness. Every status light is red.",
+        "Here, questions come from EVERY zone, from cables to Kubernetes. Win 3 battles to draw out THE GREAT OUTAGE.",
+        "Whatever happens... I'm proud of you, kid. Now go restore that uptime."
+      ],
+      "bossIntro": [
+        "The lights in the Core flicker and die. Alarms blare. Every pager in the realm goes off at once.",
+        "THE GREAT OUTAGE: 'So, the junior engineer has come at last. I am every misconfiguration you've ever made. I have THREE phases, and you will fail them ALL!'"
+      ],
+      "outro": [
+        "THE GREAT OUTAGE lets out a final, defeated 503... and dissolves. One by one, the status lights turn green.",
+        "Old Man Ping: 'You did it. Packets flow. Pipelines pass. Pods are Running. The NetRealm is restored to five nines.'",
+        "'You came here a junior engineer. You leave a legend. Now go pass that exam!'"
+      ],
+      "monsters": [
+        { "id": "cascading-failure", "name": "Cascading Failure", "sprite": "hydra", "palette": { "b": "#a04020", "a": "#ffd447" }, "desc": "One small failure triggers the next, and the next... Circuit breakers and bulkheads contain it." },
+        { "id": "split-brain", "name": "Split Brain", "sprite": "eye", "palette": { "b": "#e06080", "a": "#4040a0" }, "desc": "Two cluster nodes both think they're primary. Quorum is the cure." },
+        { "id": "thundering-herd", "name": "Thundering Herd", "sprite": "crab", "palette": { "b": "#8a7a5a", "a": "#e04040" }, "desc": "A thousand clients retry at the exact same moment. Add jitter to your exponential backoff!" },
+        { "id": "spof", "name": "Single Point of Failure", "sprite": "orb", "palette": { "b": "#3a3a3a", "a": "#ffd447" }, "desc": "One cable, one switch, one engineer who knows the password. Redundancy defeats it." },
+        { "id": "cosmic-ray", "name": "Cosmic Ray Bit Flip", "sprite": "cloud", "palette": { "b": "#5a4a8a", "a": "#40ffff" }, "desc": "Flipped a single bit in RAM at 3 AM. ECC memory is its nemesis." },
+        { "id": "its-always-dns", "name": "It's Always DNS", "sprite": "skull", "palette": { "b": "#ffffff", "a": "#4080ff" }, "desc": "It's not DNS. There's no way it's DNS. ...It was DNS." }
+      ],
+      "boss": { "id": "great-outage", "name": "THE GREAT OUTAGE", "sprite": "dragon", "palette": { "b": "#2a1a3a", "a": "#ff2050" }, "loot": "uptime-trophy", "desc": "Born from every unpatched server, untested change and Friday-afternoon deploy. Three phases: Networking, Operations, then Everything.", "taunts": ["I AM THE GREAT OUTAGE! Every status page in the realm is RED!", "Phase two! You restored the network... but can you restore OPERATIONS?!", "FINAL PHASE! Everything, all at once! Your pager will NEVER stop!"] }
+    }
+  ]
+}
