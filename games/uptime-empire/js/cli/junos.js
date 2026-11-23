@@ -1038,6 +1038,13 @@ export function makeJunos(evo) {
       const c = counters(s.world, s.dev, n);
       return [`${s.dev.cfg.hostname}                  Seconds: 3                   Time: ${fmtDate(s.world.time.t, 'datetime').slice(11)}:03`, '', `Interface: ${n}, Enabled, Link is ${S_(s.world).ifs[s.dev.id][n]?.up ? 'Up' : 'Down'}`, `Input bytes:              ${c.inB} (${c.rateIn} bps)`, `Output bytes:             ${c.outB} (${c.rateOut} bps)`, `Input errors:             ${c.inErr}`, `Framing errors:           ${c.crc}`];
     } },
+    { p: 'clear ethernet-switching bpdu-error interface $word:if', run: (s, a) => {
+      const n = canon(s.dev, s.dev.cfg, a.if);
+      if (!n) return `error: interface ${a.if} not found`;
+      delete s.dev.run.errdis[n];
+      s.world.dirty = true;
+      return '';
+    } },
     { p: 'clear interfaces statistics {all|$word:if}', run: (s) => {
       for (const n of Object.keys(s.dev.cfg.ifs)) s.dev.run.counters[n] = { clear: s.world.time.t, crcBase: 0 };
       return '';

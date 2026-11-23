@@ -9,7 +9,7 @@ Every device stores its configuration in a **vendor-neutral model** (`device.cfg
 Consequences:
 - A fault such as "wrong access VLAN" is written once (`js/game/faults.js`) and works on every switch OS.
 - Replacing a Cisco core with a Juniper core keeps the logical network; the builder re-renders it.
-- Each dialect exports `recipes`: the exact commands to diagnose and fix each fault kind. These power the in-game hints *and* the automated tests (inject fault → run the recipe through the real CLI → assert the service recovers), so every OS is proven able to fix every fault it can have.
+- `js/game/recipes.js` turns each fault's abstract fix ("enable this interface", "add VLAN 103 to this trunk") into the exact commands for the device's OS. These power the in-game hints *and* the automated tests (inject fault → type the recipe into the real CLI → assert the service recovers), so every OS is proven able to fix every fault it can have.
 
 ## Modules
 
@@ -25,9 +25,14 @@ Consequences:
 | `js/net/builder.js` | Source of truth → network. Wires devices by role, renders configs, onboards customers, generates docs (IPAM, cable patching schedule, topology). |
 | `js/net/sim.js` | Computes link/L2/L3 state, routes, adjacencies; `walk()` traces packets; `checks()` evaluates monitoring; utilisation; event/log generation. |
 | `js/cli/engine.js` | Grammar compiler (keywords, args, optional, alternatives, repeats), abbreviation, `?` help, tab completion, pipes, errors. |
-| `js/cli/*.js` | Dialects: `ios`, `nxos`, `asa`, `iosxr`, `junos` (+EVO), `aoscx`, `aoss`, `arubaos`, `fortios` (+FortiSwitch, FortiAP), `linux` (jump host). |
-| `js/game/*.js` | Tycoon clock, economy, customers, faults/incidents/SLA/RCA, changes & maintenance windows, firmware & advisories, campaign, saves. |
-| `js/ui/*.js`, `js/views/*.js` | DOM helpers, terminal widget, and each screen. |
+| `js/cli/*.js` | Dialects: `ios.js` (IOS/IOS XE), `nxos.js`, `asa.js`, `iosxr.js`, `junos.js` (+EVO), `aruba.js` (AOS-CX, AOS-Switch, ArubaOS, AP boot), `fortios.js` (FortiOS, FortiSwitch, FortiAP), `linux.js` (jump host and servers). `common.js` holds shared ping/trace/counters helpers; `registry.js`/`index.js` register dialects. |
+| `js/net/events.js`, `js/net/devops.js` | State diffs → syslog events; reload/boot/power and Junos commit-confirmed rollback. |
+| `js/game/faults.js` | Fault catalog: targets, inject, fixed?, ticket text per difficulty, RCA truth, hints, fix ops. |
+| `js/game/recipes.js` | Fix ops → exact per-OS commands (hints and tests). |
+| `js/game/facility.js` | Racks, A/B feeds, UPS, generator, cooling, temperatures, physical actions. |
+| `js/game/game.js` | Clock, difficulty, economy, leads, tickets/SLA/RCA, changes, advisories, campaign and set pieces, saves. |
+| `js/ui/dom.js`, `js/ui/terminal.js` | DOM helpers; terminal widget and dock. |
+| `js/views/*.js` | Screens: `infra.js` (data hall, racks, device panel, topology), `ops.js` (tickets, NOC), `docs.js`, `biz.js` (shop, customers, changes, finance, goals). |
 
 ## World model (save file)
 

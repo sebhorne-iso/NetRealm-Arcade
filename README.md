@@ -11,6 +11,7 @@ Everything is static HTML/CSS/JavaScript: no frameworks, no build step, no serve
 | Game | What it is |
 |------|------------|
 | ⚔️ [**Packet Quest: The Great Outage**](games/packet-quest/) | A retro RPG where every battle is a question. Nine zones covering networking fundamentals through Kubernetes, with spaced repetition, a Codex, daily quests and a two-player Quiz Duel. [More →](games/packet-quest/README.md) |
+| 🏢 [**Uptime Empire**](games/uptime-empire/) | A datacentre tycoon from 1995 to today. Rack era-accurate Cisco, Juniper, HP/Aruba and Fortinet gear, keep customers inside their SLAs, and troubleshoot real outages in realistic IOS, NX-OS, ASA, IOS XR, Junos, AOS-CX, AOS-Switch, ArubaOS and FortiOS command lines. [More →](games/uptime-empire/README.md) |
 
 The live list is [`games.json`](games.json); the hub reads it.
 
