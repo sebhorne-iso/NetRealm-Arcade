@@ -1,0 +1,462 @@
+{
+  "entries": [
+    {
+      "id": "fund-osi", "zone": "fundamentals", "title": "The OSI & TCP/IP Models",
+      "body": [
+        { "p": "Models split networking into layers so each layer only worries about its own job. Exams love asking which layer a device, protocol or PDU belongs to." },
+        { "table": { "head": ["#", "OSI layer", "PDU", "Examples", "Devices"], "rows": [
+          ["7", "Application", "Data", "HTTP, DNS, SSH, SMTP", "—"],
+          ["6", "Presentation", "Data", "TLS encryption, JPEG, ASCII", "—"],
+          ["5", "Session", "Data", "Session setup/teardown, RPC", "—"],
+          ["4", "Transport", "Segment / Datagram", "TCP, UDP, port numbers", "Firewalls (L4)"],
+          ["3", "Network", "Packet", "IPv4, IPv6, ICMP, OSPF", "Routers, L3 switches"],
+          ["2", "Data Link", "Frame", "Ethernet, MAC, 802.1Q, ARP*", "Switches, bridges, APs"],
+          ["1", "Physical", "Bits", "Cables, fiber, radio, voltages", "Hubs, repeaters, NICs"]
+        ] } },
+        { "tip": "Top down: **All People Seem To Need Data Processing**. Bottom up: **Please Do Not Throw Sausage Pizza Away**." },
+        { "h": "TCP/IP model (4 layers)" },
+        { "list": ["**Application** = OSI 5, 6, 7", "**Transport** = OSI 4", "**Internet** = OSI 3", "**Network Access / Link** = OSI 1 + 2"] },
+        { "p": "*ARP sits between layers 2 and 3. Exams usually call it Layer 2 because it resolves MAC addresses." }
+      ]
+    },
+    {
+      "id": "fund-encap", "zone": "fundamentals", "title": "Encapsulation & De-encapsulation",
+      "body": [
+        { "p": "On the way DOWN the stack each layer adds a header (Layer 2 also adds a trailer). On the way UP the receiver strips them in reverse." },
+        { "steps": ["**Data**: the application's message", "**Segment**: + TCP/UDP header (ports, sequence numbers)", "**Packet**: + IP header (source/destination IP, TTL)", "**Frame**: + Ethernet header (MACs, EtherType) and trailer (FCS)", "**Bits**: signals on the wire or in the air"] },
+        { "tip": "IP addresses stay the same end to end (unless NAT changes them), but the Layer 2 MAC addresses are rewritten at EVERY router hop." }
+      ]
+    },
+    {
+      "id": "fund-tcpudp", "zone": "fundamentals", "title": "TCP vs UDP",
+      "body": [
+        { "table": { "head": ["", "TCP", "UDP"], "rows": [
+          ["Connection", "Connection-oriented (3-way handshake)", "Connectionless"],
+          ["Reliability", "ACKs, sequence numbers, retransmission", "None (best effort)"],
+          ["Flow control", "Sliding window", "None"],
+          ["Header", "20+ bytes", "8 bytes"],
+          ["Used by", "HTTP(S), SSH, SMTP, FTP, BGP", "DNS queries, DHCP, TFTP, SNMP, Syslog, NTP, VoIP, video"]
+        ] } },
+        { "h": "Three-way handshake" },
+        { "code": "Client → SYN      → Server\nClient ← SYN-ACK  ← Server\nClient → ACK      → Server   (ESTABLISHED)" },
+        { "p": "FIN closes a connection gracefully; RST aborts it immediately." }
+      ]
+    },
+    {
+      "id": "fund-ports", "zone": "fundamentals", "title": "Common Ports Cheat Sheet",
+      "body": [
+        { "table": { "head": ["Port", "Proto", "Service"], "rows": [
+          ["20 / 21", "TCP", "FTP data / control"], ["22", "TCP", "SSH, SCP, SFTP"], ["23", "TCP", "Telnet (insecure!)"], ["25", "TCP", "SMTP"],
+          ["53", "UDP/TCP", "DNS"], ["67 / 68", "UDP", "DHCP server / client"], ["69", "UDP", "TFTP"], ["80", "TCP", "HTTP"],
+          ["110", "TCP", "POP3"], ["123", "UDP", "NTP"], ["143", "TCP", "IMAP"], ["161 / 162", "UDP", "SNMP / SNMP traps"],
+          ["389", "TCP", "LDAP"], ["443", "TCP", "HTTPS (and REST APIs)"], ["445", "TCP", "SMB"], ["514", "UDP", "Syslog"],
+          ["636", "TCP", "LDAPS"], ["830", "TCP", "NETCONF over SSH"], ["3389", "TCP", "RDP"]
+        ] } },
+        { "p": "Port ranges: **well-known** 0–1023, **registered** 1024–49151, **dynamic/ephemeral** 49152–65535 (client source ports)." }
+      ]
+    },
+    {
+      "id": "fund-ethernet", "zone": "fundamentals", "title": "Ethernet, MAC Addresses & Cabling",
+      "body": [
+        { "list": ["MAC address = **48 bits**, 12 hex digits. The first 24 bits are the **OUI** (vendor).", "Broadcast MAC = **FF:FF:FF:FF:FF:FF**.", "Switches learn from the **source** MAC, forward by the **destination** MAC, and **flood** unknown unicasts and broadcasts.", "Default Ethernet **MTU = 1500 bytes**."] },
+        { "h": "Collision & broadcast domains" },
+        { "list": ["Hub: 1 collision domain, 1 broadcast domain", "Switch: 1 collision domain **per port**, 1 broadcast domain (per VLAN)", "Router: each interface is its own broadcast domain"] },
+        { "h": "Cabling" },
+        { "table": { "head": ["Cable", "Use"], "rows": [
+          ["Straight-through", "Unlike devices: PC↔switch, router↔switch"],
+          ["Crossover", "Like devices: switch↔switch, PC↔PC, router↔router (Auto-MDIX makes this mostly moot)"],
+          ["Rollover / console", "PC to a device's console port"],
+          ["Cat5e / Cat6 copper", "Up to **100 m**"],
+          ["Multimode fiber", "Shorter runs (hundreds of meters), cheaper optics"],
+          ["Single-mode fiber", "Long distance (kilometers), laser optics"]
+        ] } },
+        { "tip": "CRC errors, runts and late collisions point to Layer 1: bad cables, EMI or a duplex mismatch." }
+      ]
+    },
+
+    {
+      "id": "sub-binary", "zone": "subnetting", "title": "Binary & Powers of Two",
+      "body": [
+        { "table": { "head": ["Bit", "128", "64", "32", "16", "8", "4", "2", "1"], "rows": [["Value", "2⁷", "2⁶", "2⁵", "2⁴", "2³", "2²", "2¹", "2⁰"]] } },
+        { "p": "**Binary → decimal:** add the place values of the 1 bits. `11000000` = 128 + 64 = **192**." },
+        { "p": "**Decimal → binary:** go left to right: is the number ≥ the place value? Write 1 and subtract; otherwise write 0." },
+        { "h": "Subnet mask octet values" },
+        { "table": { "head": ["Bits set", "1", "2", "3", "4", "5", "6", "7", "8"], "rows": [["Value", "128", "192", "224", "240", "248", "252", "254", "255"]] } },
+        { "tip": "Memorize 128-192-224-240-248-252-254-255. It makes subnetting about 10× faster." }
+      ]
+    },
+    {
+      "id": "sub-cidr", "zone": "subnetting", "title": "CIDR Cheat Sheet (/8 to /32)",
+      "body": [
+        { "table": { "head": ["Prefix", "Mask", "Addresses", "Usable hosts"], "rows": [
+          ["/8", "255.0.0.0", "16,777,216", "16,777,214"], ["/16", "255.255.0.0", "65,536", "65,534"],
+          ["/20", "255.255.240.0", "4,096", "4,094"], ["/21", "255.255.248.0", "2,048", "2,046"], ["/22", "255.255.252.0", "1,024", "1,022"], ["/23", "255.255.254.0", "512", "510"],
+          ["/24", "255.255.255.0", "256", "254"], ["/25", "255.255.255.128", "128", "126"], ["/26", "255.255.255.192", "64", "62"], ["/27", "255.255.255.224", "32", "30"],
+          ["/28", "255.255.255.240", "16", "14"], ["/29", "255.255.255.248", "8", "6"], ["/30", "255.255.255.252", "4", "2"], ["/31", "255.255.255.254", "2", "2 (point-to-point, RFC 3021)"], ["/32", "255.255.255.255", "1", "1 (host route)"]
+        ] } },
+        { "p": "**Usable hosts = 2^(32 − prefix) − 2** (subtract the network and broadcast addresses)." },
+        { "p": "**Number of subnets = 2^(borrowed bits).** Example: /24 → /27 borrows 3 bits = 8 subnets." }
+      ]
+    },
+    {
+      "id": "sub-magic", "zone": "subnetting", "title": "The Magic Number Method",
+      "body": [
+        { "steps": ["Find the **interesting octet**: the one where the mask is neither 255 nor 0.", "**Block size** = 256 − the mask value in that octet.", "Find the multiple of the block size that is **≤** the IP's value in that octet. That's the **network**.", "**Broadcast** = next network − 1. **First host** = network + 1. **Last host** = broadcast − 1."] },
+        { "h": "Example: 172.16.45.200/20" },
+        { "code": "/20 = 255.255.240.0  → interesting octet = 3rd (240)\nblock size = 256 - 240 = 16\nmultiples of 16: 0, 16, 32, 48 ...  45 falls in 32-47\nnetwork   = 172.16.32.0\nbroadcast = 172.16.47.255\nhosts     = 172.16.32.1 - 172.16.47.254" },
+        { "tip": "Wildcard mask = 255.255.255.255 − subnet mask. /20 → 0.0.15.255. Used by ACLs and OSPF." }
+      ]
+    },
+    {
+      "id": "sub-special", "zone": "subnetting", "title": "Private, Special & Classful Addresses",
+      "body": [
+        { "table": { "head": ["Range", "Purpose"], "rows": [
+          ["10.0.0.0/8", "Private (RFC 1918)"], ["172.16.0.0/12", "Private: 172.16.0.0–172.31.255.255"], ["192.168.0.0/16", "Private"],
+          ["127.0.0.0/8", "Loopback"], ["169.254.0.0/16", "APIPA / link-local (DHCP failed!)"], ["100.64.0.0/10", "Carrier-grade NAT shared space"],
+          ["224.0.0.0/4", "Multicast (Class D)"], ["240.0.0.0/4", "Reserved (Class E)"], ["0.0.0.0/0", "Default route"]
+        ] } },
+        { "h": "Classful (legacy, still on exams)" },
+        { "list": ["Class A: first octet 1–126, default /8", "Class B: 128–191, default /16", "Class C: 192–223, default /24", "Class D: 224–239 multicast; Class E: 240–255 experimental"] },
+        { "p": "VLSM rule: allocate the **largest** subnets first so every block stays aligned. Summarize contiguous networks by counting matching bits (four /24s → one /22)." }
+      ]
+    },
+    {
+      "id": "sub-ipv6", "zone": "subnetting", "title": "IPv6 Essentials",
+      "body": [
+        { "list": ["**128 bits**, written as 8 groups (hextets) of 4 hex digits.", "Shorten: drop leading zeros in a group; replace ONE run of all-zero groups with `::`.", "Standard LAN size: **/64** (64-bit prefix + 64-bit interface ID).", "No broadcast: IPv6 uses multicast. ARP is replaced by **NDP** (ICMPv6)."] },
+        { "table": { "head": ["Prefix", "Type"], "rows": [
+          ["2000::/3", "Global unicast (public)"], ["FC00::/7 (FD00::/8 in use)", "Unique local (private-ish)"], ["FE80::/10", "Link-local (every interface has one)"],
+          ["FF00::/8", "Multicast (FF02::1 = all nodes, FF02::2 = all routers)"], ["::1/128", "Loopback"], ["::/128", "Unspecified"]
+        ] } },
+        { "p": "**SLAAC:** hosts learn the prefix from Router Advertisements and build their own interface ID (**EUI-64**: split the MAC, insert FFFE, flip the 7th bit, or use a random ID)." },
+        { "code": "2001:0db8:0000:0000:0000:ff00:0042:8329\n→ 2001:db8::ff00:42:8329" }
+      ]
+    },
+
+    {
+      "id": "rt-vlans", "zone": "routing", "title": "VLANs & Trunking",
+      "body": [
+        { "list": ["A VLAN = one broadcast domain = (usually) one IP subnet.", "**Access port**: one data VLAN (+ optional voice VLAN), untagged frames.", "**Trunk port**: many VLANs, tagged with **802.1Q** (4-byte tag, 12-bit VLAN ID).", "**Native VLAN** frames cross the trunk **untagged**; default VLAN 1. It must match on both ends.", "Usable VLAN IDs: 1–4094."] },
+        { "code": "SW1(config)# vlan 10\nSW1(config-vlan)# name SALES\nSW1(config)# interface g0/3\nSW1(config-if)# switchport mode access\nSW1(config-if)# switchport access vlan 10\nSW1(config)# interface g0/24\nSW1(config-if)# switchport mode trunk\nSW1(config-if)# switchport trunk native vlan 999" },
+        { "h": "Inter-VLAN routing" },
+        { "list": ["**Router-on-a-stick**: subinterfaces with `encapsulation dot1Q <vlan>` on one trunk link.", "**Layer 3 switch**: SVIs (`interface vlan 10`) + `ip routing`."] },
+        { "p": "Verify with `show vlan brief`, `show interfaces trunk`." }
+      ]
+    },
+    {
+      "id": "rt-stp", "zone": "routing", "title": "Spanning Tree Protocol",
+      "body": [
+        { "p": "STP prevents Layer 2 loops (Ethernet has no TTL!) by blocking redundant paths." },
+        { "steps": ["Elect the **root bridge**: lowest bridge ID (priority, default 32768 + VLAN, then lowest MAC).", "Each non-root switch picks ONE **root port**: lowest cost to root.", "Each segment picks one **designated port**.", "Everything else becomes **alternate/blocking**."] },
+        { "table": { "head": ["Version", "Standard", "Notes"], "rows": [
+          ["STP", "802.1D", "Blocking → Listening (15s) → Learning (15s) → Forwarding; 30–50s convergence"],
+          ["RSTP", "802.1w", "Fast: discarding/learning/forwarding, proposal/agreement"],
+          ["MSTP", "802.1s", "Maps many VLANs to a few instances"],
+          ["PVST+ / Rapid PVST+", "Cisco", "One tree per VLAN"]
+        ] } },
+        { "list": ["**PortFast**: edge ports to hosts go straight to forwarding.", "**BPDU Guard**: err-disables a PortFast port that receives a BPDU.", "Make your core switch root deliberately: `spanning-tree vlan 10 root primary`."] }
+      ]
+    },
+    {
+      "id": "rt-table", "zone": "routing", "title": "Routing Table & Route Selection",
+      "body": [
+        { "steps": ["**Longest prefix match** wins (most specific route).", "Same prefix from different sources → lowest **administrative distance**.", "Same protocol → lowest **metric** (ties may load-balance)."] },
+        { "table": { "head": ["Source", "AD", "Code"], "rows": [
+          ["Connected", "0", "C (and L for the local /32)"], ["Static", "1", "S"], ["eBGP", "20", "B"], ["EIGRP", "90", "D"],
+          ["OSPF", "110", "O"], ["IS-IS", "115", "i"], ["RIP", "120", "R"], ["iBGP", "200", "B"], ["Unusable", "255", "—"]
+        ] } },
+        { "code": "R1(config)# ip route 10.2.2.0 255.255.255.0 10.1.12.2        ! static\nR1(config)# ip route 0.0.0.0 0.0.0.0 203.0.113.1             ! default\nR1(config)# ip route 0.0.0.0 0.0.0.0 198.51.100.1 200        ! floating backup" },
+        { "p": "In `show ip route`, `[110/2]` means AD 110, metric 2. `S*` marks a candidate default route." }
+      ]
+    },
+    {
+      "id": "rt-ospf", "zone": "routing", "title": "OSPF Fundamentals",
+      "body": [
+        { "list": ["**Link-state** protocol: routers flood LSAs, build an identical LSDB and run SPF (Dijkstra).", "Metric = **cost** = reference bandwidth (100 Mbps default) ÷ interface bandwidth.", "**Area 0** is the backbone; other areas attach to it.", "Multicast: **224.0.0.5** (all OSPF routers), **224.0.0.6** (DR/BDR).", "Router ID: manual → highest loopback IP → highest active interface IP.", "DR/BDR on broadcast segments: highest priority (default 1), then highest RID. Priority 0 = never."] },
+        { "p": "Neighbor states: Down → Init → 2-Way → ExStart → Exchange → Loading → **Full**." },
+        { "p": "Neighbors must match: area, subnet/mask, hello/dead timers, authentication, stub flags and MTU." },
+        { "code": "R1(config)# router ospf 1\nR1(config-router)# router-id 1.1.1.1\nR1(config-router)# network 10.0.0.0 0.0.0.255 area 0\n! or per-interface:\nR1(config-if)# ip ospf 1 area 0\nR1# show ip ospf neighbor" }
+      ]
+    },
+    {
+      "id": "rt-redundancy", "zone": "routing", "title": "EtherChannel, FHRP & Discovery",
+      "body": [
+        { "h": "EtherChannel" },
+        { "list": ["Bundles 2–8 links into one logical link: more bandwidth, and STP sees one link.", "**LACP** (802.3ad, open): active/passive. **PAgP** (Cisco): desirable/auto. Or static `on`.", "Member links must match speed, duplex, VLANs and trunk settings."] },
+        { "h": "First Hop Redundancy" },
+        { "list": ["Hosts use a **virtual IP/MAC** as their default gateway.", "**HSRP** (Cisco): active/standby. **VRRP** (open standard): master/backup. **GLBP** (Cisco): load-balances across gateways."] },
+        { "h": "Discovery" },
+        { "list": ["**CDP**: Cisco-proprietary, on by default (`show cdp neighbors`).", "**LLDP**: vendor-neutral 802.1AB (`lldp run`, `show lldp neighbors`)."] }
+      ]
+    },
+
+    {
+      "id": "sec-dnsdhcp", "zone": "security", "title": "DNS & DHCP",
+      "body": [
+        { "table": { "head": ["Record", "Purpose"], "rows": [
+          ["A", "Name → IPv4"], ["AAAA", "Name → IPv6"], ["CNAME", "Alias to another name"], ["MX", "Mail servers (lower preference first)"],
+          ["PTR", "Reverse: IP → name"], ["NS", "Authoritative name servers"], ["TXT", "Text (SPF, verification)"], ["SOA", "Zone authority info"]
+        ] } },
+        { "p": "DNS uses **UDP 53** for queries and **TCP 53** for zone transfers and large responses. The TTL controls caching. Tools: `dig`, `nslookup`, `host`." },
+        { "h": "DHCP: DORA" },
+        { "steps": ["**Discover** (client broadcast, UDP 68 → 67)", "**Offer** (server proposes an address)", "**Request** (client asks for it)", "**Acknowledge** (server confirms the lease)"] },
+        { "p": "Broadcasts don't cross routers, so configure a relay on the client-facing interface: `ip helper-address <server>`." },
+        { "tip": "If a host shows 169.254.x.x, DHCP failed. Check the server, the relay, the VLAN and the cabling." }
+      ]
+    },
+    {
+      "id": "sec-nat", "zone": "security", "title": "NAT & PAT",
+      "body": [
+        { "table": { "head": ["Type", "Mapping", "Use"], "rows": [
+          ["Static NAT", "1 private ↔ 1 public, permanent", "Servers reachable from outside"],
+          ["Dynamic NAT", "Private → pool of public IPs", "Rare today"],
+          ["PAT (overload)", "Many private → 1 public using ports", "Every home and office router"]
+        ] } },
+        { "list": ["**Inside local**: the inside host's real (private) IP", "**Inside global**: the public IP representing the inside host", "**Outside local / global**: the outside host as seen from inside / outside (usually the same)"] },
+        { "code": "R1(config)# access-list 1 permit 192.168.1.0 0.0.0.255\nR1(config)# ip nat inside source list 1 interface g0/1 overload\nR1(config)# interface g0/0\nR1(config-if)# ip nat inside\nR1(config)# interface g0/1\nR1(config-if)# ip nat outside\nR1# show ip nat translations" }
+      ]
+    },
+    {
+      "id": "sec-acl", "zone": "security", "title": "Access Control Lists",
+      "body": [
+        { "table": { "head": ["Type", "Numbers", "Matches", "Place near"], "rows": [
+          ["Standard", "1–99, 1300–1999", "Source IP only", "Destination"],
+          ["Extended", "100–199, 2000–2699", "Src/dst IP, protocol, ports", "Source"]
+        ] } },
+        { "list": ["Processed **top-down, first match wins**.", "Invisible **implicit deny any** at the end.", "Wildcard masks: 0 = must match, 1 = ignore. `host x.x.x.x` = 0.0.0.0, `any` = 255.255.255.255.", "One ACL per interface, per direction, per protocol."] },
+        { "code": "R1(config)# ip access-list extended BLOCK_TELNET\nR1(config-ext-nacl)# deny tcp any any eq 23\nR1(config-ext-nacl)# permit ip any any\nR1(config)# interface g0/0\nR1(config-if)# ip access-group BLOCK_TELNET in" }
+      ]
+    },
+    {
+      "id": "sec-concepts", "zone": "security", "title": "Security Concepts, Attacks & Defenses",
+      "body": [
+        { "list": ["**CIA**: Confidentiality, Integrity, Availability.", "**AAA**: Authentication (who), Authorization (what you may do), Accounting (what you did).", "**TACACS+**: TCP 49, encrypts the whole payload, per-command authorization. **RADIUS**: UDP 1812/1813, network access, encrypts only the password.", "**MFA** factors: something you know / have / are."] },
+        { "table": { "head": ["Attack", "Defense"], "rows": [
+          ["MAC flooding", "Port security"], ["Rogue DHCP / DHCP starvation", "DHCP snooping"], ["ARP spoofing (MITM)", "Dynamic ARP Inspection"],
+          ["VLAN hopping (DTP / double tagging)", "Disable DTP; unused native VLAN"], ["Brute force", "Lockout, MFA, SSH keys"], ["Phishing / vishing / smishing", "User training, MFA, email filtering"],
+          ["DDoS / SYN flood", "Rate limiting, SYN cookies, scrubbing services"]
+        ] } },
+        { "p": "**Syslog severities**: 0 Emergency, 1 Alert, 2 Critical, 3 Error, 4 Warning, 5 Notice, 6 Informational, 7 Debugging. **SNMPv3** adds authentication and encryption. **NTP**: lower stratum = closer to the reference clock." }
+      ]
+    },
+    {
+      "id": "sec-wireless", "zone": "security", "title": "Wireless & VPNs",
+      "body": [
+        { "table": { "head": ["Standard", "Name", "Bands"], "rows": [
+          ["802.11n", "Wi-Fi 4", "2.4 / 5 GHz"], ["802.11ac", "Wi-Fi 5", "5 GHz"], ["802.11ax", "Wi-Fi 6 / 6E", "2.4 / 5 (/6) GHz"], ["802.11be", "Wi-Fi 7", "2.4 / 5 / 6 GHz"]
+        ] } },
+        { "list": ["2.4 GHz non-overlapping channels: **1, 6, 11**.", "Security: WEP (broken) → WPA (TKIP) → **WPA2** (AES-CCMP) → **WPA3** (SAE for Personal, 192-bit option for Enterprise).", "Personal = pre-shared key; Enterprise = 802.1X + RADIUS."] },
+        { "h": "VPNs" },
+        { "list": ["**Site-to-site**: connects networks, usually IPsec between routers or firewalls.", "**Remote access**: users to the network (SSL/TLS VPN clients, or IPsec).", "GRE tunnels aren't encrypted on their own: run them over IPsec."] }
+      ]
+    },
+
+    {
+      "id": "lx-nav", "zone": "linux", "title": "Files & Navigation",
+      "body": [
+        { "table": { "head": ["Command", "Does"], "rows": [
+          ["pwd", "Print working directory"], ["ls -la", "List all files, long format"], ["cd /path, cd .., cd ~, cd -", "Change directory"],
+          ["mkdir -p a/b", "Make directories"], ["cp -r src dst / mv a b / rm -r dir", "Copy / move-rename / remove"],
+          ["cat, less, head -n 20, tail -n 20, tail -f", "View files"], ["find /etc -name \"*.conf\"", "Find files"],
+          ["df -h / du -sh dir", "Disk free / directory size"]
+        ] } },
+        { "h": "Key directories" },
+        { "list": ["/etc: configuration", "/var/log: logs", "/home: users' files (/root is root's)", "/bin, /usr/bin: programs", "/tmp: temporary files", "/proc, /sys: kernel and process info"] }
+      ]
+    },
+    {
+      "id": "lx-perms", "zone": "linux", "title": "Permissions & Ownership",
+      "body": [
+        { "code": "-rwxr-x---  1 alice netops  2048 deploy.sh\n type|owner|group|other" },
+        { "table": { "head": ["Symbol", "Value", "On a file", "On a directory"], "rows": [
+          ["r", "4", "Read contents", "List names"], ["w", "2", "Modify", "Create/delete entries"], ["x", "1", "Execute", "Enter/traverse"]
+        ] } },
+        { "list": ["`chmod 755 f` = rwxr-xr-x; `chmod 644 f` = rw-r--r--; `chmod 640 f` = rw-r-----; `chmod +x f` adds execute.", "`chown user:group f` changes ownership (needs root).", "`umask 022`: new files get 644, new directories 755.", "root is UID 0; `sudo` runs commands as root (controlled by /etc/sudoers)."] }
+      ]
+    },
+    {
+      "id": "lx-pipes", "zone": "linux", "title": "Pipes, Redirection & Text Tools",
+      "body": [
+        { "table": { "head": ["Syntax", "Meaning"], "rows": [
+          ["cmd > file", "Write stdout (overwrite)"], ["cmd >> file", "Append stdout"], ["cmd 2> err.log", "Redirect stderr"], ["cmd > out.log 2>&1", "stdout AND stderr to a file"],
+          ["cmd1 | cmd2", "Pipe stdout into the next command"], ["cmd1 && cmd2", "Run cmd2 only if cmd1 succeeds"], ["cmd1 || cmd2", "Run cmd2 only if cmd1 fails"]
+        ] } },
+        { "list": ["`grep -i -n -v -r -c pattern file`", "`wc -l`: count lines", "`sort`, `uniq -c`, `sort -nr`", "`cut -d: -f1 /etc/passwd`, `awk '{print $1}'`, `sed 's/old/new/g'`"] },
+        { "code": "# Top 5 client IPs hitting the web server\ncat access.log | awk '{print $1}' | sort | uniq -c | sort -nr | head -5" },
+        { "p": "Exit status: `0` = success. Check it with `echo $?`. Variables: `$HOME`, `$PATH`, `$1` (first argument), `$#` (argument count)." }
+      ]
+    },
+    {
+      "id": "lx-procs", "zone": "linux", "title": "Processes, Services & Logs",
+      "body": [
+        { "table": { "head": ["Command", "Does"], "rows": [
+          ["ps aux / pgrep name / top / htop", "See processes"], ["kill PID (SIGTERM 15)", "Ask a process to exit"], ["kill -9 PID (SIGKILL)", "Force-kill (last resort)"],
+          ["systemctl status|start|stop|restart|reload|enable nginx", "Manage services"], ["journalctl -u nginx -f", "Service logs (follow)"], ["journalctl -p err --since today", "Errors today"]
+        ] } },
+        { "list": ["PID 1 = **systemd** on most distros.", "Zombie = finished, but the parent hasn't reaped it. Orphan = parent died; init adopts it.", "Packages: **apt** (Debian/Ubuntu), **dnf/yum** (RHEL/Fedora).", "cron: `m h dom mon dow cmd`. `0 2 * * *` = daily at 02:00."] }
+      ]
+    },
+    {
+      "id": "lx-net", "zone": "linux", "title": "Linux Networking Commands",
+      "body": [
+        { "table": { "head": ["Task", "Modern", "Legacy"], "rows": [
+          ["Show IPs", "ip a", "ifconfig"], ["Show routes", "ip route", "route -n / netstat -rn"], ["ARP/neighbors", "ip neigh", "arp -a"],
+          ["Listening ports", "ss -tulpn", "netstat -tulpn"], ["DNS lookup", "dig / host", "nslookup"], ["Path", "traceroute / tracepath / mtr", "—"],
+          ["Test TCP port", "nc -zv host 443", "telnet host 443"], ["HTTP", "curl -v https://host", "wget"]
+        ] } },
+        { "list": ["/etc/resolv.conf: DNS servers", "/etc/hosts: static name entries (checked first)", "/etc/hostname: this machine's name", "`ssh user@host`, `scp file user@host:/path`, `ssh-keygen`, `ssh-copy-id`"] }
+      ]
+    },
+
+    {
+      "id": "ci-git", "zone": "cicd", "title": "Git Command Cheat Sheet",
+      "body": [
+        { "table": { "head": ["Command", "Does"], "rows": [
+          ["git init / git clone URL", "Create / copy a repo"], ["git status", "What changed?"], ["git add . / git add file", "Stage changes"],
+          ["git commit -m \"msg\"", "Snapshot staged changes"], ["git log --oneline --graph", "History"], ["git diff / git diff --staged", "Unstaged / staged changes"],
+          ["git switch -c feat / git checkout -b feat", "New branch"], ["git switch main", "Change branch"], ["git merge feat", "Merge feat into current branch"],
+          ["git rebase main", "Replay commits on top of main"], ["git fetch / git pull / git push -u origin feat", "Sync with the remote"],
+          ["git stash / git stash pop", "Shelve / restore work"], ["git revert <sha>", "Undo safely with a new commit"], ["git reset --hard", "Discard local changes (dangerous!)"]
+        ] } },
+        { "p": "Three areas: **working tree** → `git add` → **staging area (index)** → `git commit` → **repository** → `git push` → **remote**." },
+        { "tip": "Never rewrite (rebase, reset or force-push) history that others have already pulled." }
+      ]
+    },
+    {
+      "id": "ci-branching", "zone": "cicd", "title": "Branching, PRs & Merge Conflicts",
+      "body": [
+        { "list": ["**Feature branch workflow**: branch → commit → pull request → review + CI → merge → delete the branch.", "**Trunk-based development**: tiny, short-lived branches merged to main daily; feature flags hide unfinished work.", "**Merge** keeps the true history (merge commits); **rebase** gives a linear history but rewrites commit IDs."] },
+        { "h": "Resolving a conflict" },
+        { "code": "<<<<<<< HEAD\nip name-server 10.0.0.53\n=======\nip name-server 10.0.0.54\n>>>>>>> feature/dns\n\n# 1. edit to the final version and delete the markers\n# 2. git add r1.cfg\n# 3. git commit (or git rebase --continue)" },
+        { "p": "**SemVer** MAJOR.MINOR.PATCH: breaking change → MAJOR, new compatible feature → MINOR, bug fix → PATCH." }
+      ]
+    },
+    {
+      "id": "ci-pipelines", "zone": "cicd", "title": "CI/CD Concepts & Deployment Strategies",
+      "body": [
+        { "list": ["**CI**: integrate often; every push is built and tested automatically.", "**Continuous Delivery**: always releasable; a human approves production.", "**Continuous Deployment**: every green change goes to production automatically.", "Pipeline: source → build → test → package (artifact) → deploy → monitor.", "**Build once**, promote the same artifact through every environment.", "**Shift left**: lint, test and scan as early as possible."] },
+        { "table": { "head": ["Strategy", "How", "Trade-off"], "rows": [
+          ["Rolling", "Replace instances gradually", "Cheap; mixed versions during rollout"],
+          ["Blue/green", "Two environments; flip traffic", "Instant rollback; double the infra"],
+          ["Canary", "Small % of users first", "Low blast radius; needs good metrics"],
+          ["Recreate", "Stop old, start new", "Simple; causes downtime"]
+        ] } }
+      ]
+    },
+    {
+      "id": "ci-actions", "zone": "cicd", "title": "GitHub Actions & YAML",
+      "body": [
+        { "p": "Workflows live in `.github/workflows/*.yml`. YAML uses **spaces, never tabs**." },
+        { "code": "name: validate-configs\non:\n  push:\n    branches: [main]\n  pull_request:\njobs:\n  lint:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: pip install yamllint\n      - run: yamllint configs/\n  deploy:\n    needs: lint\n    if: github.ref == 'refs/heads/main'\n    runs-on: ubuntu-latest\n    steps:\n      - run: ./deploy.sh\n        env:\n          API_TOKEN: ${{ secrets.API_TOKEN }}" },
+        { "list": ["`on:` triggers (push, pull_request, schedule, workflow_dispatch)", "`jobs:` run in parallel unless linked with `needs:`", "`uses:` runs a reusable action; `run:` runs shell commands", "Secrets: `${{ secrets.NAME }}` (masked in logs)"] }
+      ]
+    },
+
+    {
+      "id": "au-formats", "zone": "automation", "title": "JSON, YAML & XML",
+      "body": [
+        { "h": "JSON" },
+        { "code": "{\n  \"hostname\": \"core01\",\n  \"vlans\": [10, 20, 30],\n  \"managed\": true,\n  \"location\": null\n}" },
+        { "list": ["Objects `{}`, arrays `[]`, **double quotes only**, no trailing commas, no comments.", "Literals: `true`, `false`, `null` (lowercase)."] },
+        { "h": "YAML (same data)" },
+        { "code": "hostname: core01\nvlans:\n  - 10\n  - 20\n  - 30\nmanaged: true\nlocation: null" },
+        { "h": "XML (used by NETCONF)" },
+        { "code": "<device>\n  <hostname>core01</hostname>\n  <vlan>10</vlan>\n</device>" }
+      ]
+    },
+    {
+      "id": "au-rest", "zone": "automation", "title": "REST APIs & HTTP",
+      "body": [
+        { "table": { "head": ["CRUD", "HTTP verb", "Idempotent?"], "rows": [
+          ["Create", "POST", "No"], ["Read", "GET", "Yes"], ["Update (replace)", "PUT", "Yes"], ["Update (partial)", "PATCH", "Not guaranteed"], ["Delete", "DELETE", "Yes"]
+        ] } },
+        { "table": { "head": ["Code", "Meaning"], "rows": [
+          ["200", "OK"], ["201", "Created"], ["204", "No Content"], ["400", "Bad Request (malformed)"], ["401", "Unauthorized (no/invalid credentials)"],
+          ["403", "Forbidden (authenticated but not allowed)"], ["404", "Not Found"], ["429", "Too Many Requests (rate limited)"], ["500", "Internal Server Error"], ["503", "Service Unavailable"]
+        ] } },
+        { "list": ["REST is **stateless**: every request carries its own auth.", "Headers: `Authorization: Bearer <token>`, `Content-Type: application/json`, `Accept: application/json`.", "Webhooks = the server calls YOU when events happen."] },
+        { "code": "import requests\nr = requests.get(\"https://api.netrealm.io/v1/devices\",\n                 headers={\"Authorization\": f\"Bearer {token}\"})\nif r.status_code == 200:\n    for dev in r.json():\n        print(dev[\"hostname\"])" }
+      ]
+    },
+    {
+      "id": "au-model", "zone": "automation", "title": "NETCONF, RESTCONF & YANG",
+      "body": [
+        { "table": { "head": ["", "NETCONF", "RESTCONF"], "rows": [
+          ["Transport", "SSH, TCP **830**", "HTTPS (443)"], ["Encoding", "XML", "JSON or XML"], ["Operations", "<get>, <get-config>, <edit-config>, <commit>", "GET, POST, PUT, PATCH, DELETE"], ["Data model", "YANG", "YANG"]
+        ] } },
+        { "p": "**YANG** is the data modeling language: it defines the structure of config and operational data (e.g. ietf-interfaces, openconfig-interfaces, Cisco-IOS-XE-native)." },
+        { "p": "Model-driven programmability beats screen-scraping CLI output: it's structured, validated and transactional (candidate config + commit)." }
+      ]
+    },
+    {
+      "id": "au-tools", "zone": "automation", "title": "Ansible, Python & Friends",
+      "body": [
+        { "table": { "head": ["Tool", "Agent?", "Model", "Language"], "rows": [
+          ["Ansible", "Agentless (SSH/API)", "Push", "YAML playbooks"], ["Puppet", "Agent", "Pull", "Ruby DSL manifests"], ["Chef", "Agent", "Pull", "Ruby recipes"], ["Terraform", "Agentless (APIs)", "Push (declarative)", "HCL"]
+        ] } },
+        { "code": "- name: Ensure VLANs exist\n  hosts: access_switches\n  gather_facts: false\n  tasks:\n    - name: VLAN 10\n      cisco.ios.ios_vlans:\n        config:\n          - vlan_id: 10\n            name: SALES\n        state: merged" },
+        { "list": ["**Idempotent**: running it twice changes nothing the second time.", "Inventory = managed hosts and groups. `ansible all -m ping` checks connectivity.", "Python libraries: **requests** (REST), **Netmiko**/**Paramiko** (SSH CLI), **ncclient** (NETCONF), **NAPALM**/**Nornir** (multi-vendor frameworks), **Jinja2** (templates)."] }
+      ]
+    },
+    {
+      "id": "au-sdn", "zone": "automation", "title": "SDN & Controller-Based Networking",
+      "body": [
+        { "table": { "head": ["Plane", "Job", "Examples"], "rows": [
+          ["Data (forwarding)", "Move packets", "Switching, routing lookups, ACL enforcement in ASICs"],
+          ["Control", "Build the tables", "OSPF, BGP, STP, ARP"],
+          ["Management", "Configure and monitor the device", "SSH, SNMP, NETCONF, APIs"]
+        ] } },
+        { "list": ["SDN centralizes the control plane in a **controller**.", "**Northbound API**: controller ↔ apps/scripts (usually REST).", "**Southbound API**: controller ↔ devices (OpenFlow, NETCONF, RESTCONF, SSH, SNMP).", "Cisco **Catalyst Center** (formerly DNA Center): intent-based automation and assurance for campus networks (SD-Access).", "SD-Access: **underlay** = physical IP network; **overlay** = VXLAN virtual networks (LISP control plane)."] }
+      ]
+    },
+
+    {
+      "id": "cl-containers", "zone": "cloud", "title": "Docker & Containers",
+      "body": [
+        { "list": ["Containers share the host **kernel**: lightweight and fast to start. VMs run a full guest OS on a hypervisor.", "**Image** = read-only template; **container** = running instance of it.", "**Registry** stores images (Docker Hub, GHCR, ECR)."] },
+        { "code": "FROM python:3.12-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install -r requirements.txt\nCOPY . .\nEXPOSE 8080\nCMD [\"python\", \"main.py\"]" },
+        { "table": { "head": ["Command", "Does"], "rows": [
+          ["docker build -t app:1.0 .", "Build an image"], ["docker images", "List images"], ["docker run -d -p 8080:80 --name web nginx", "Run detached, HOST:CONTAINER port"],
+          ["docker ps (-a)", "Running (all) containers"], ["docker logs -f web", "Logs"], ["docker exec -it web sh", "Shell inside"], ["docker push / pull", "Registry"],
+          ["docker compose up -d", "Start a multi-container stack"]
+        ] } }
+      ]
+    },
+    {
+      "id": "cl-k8s", "zone": "cloud", "title": "Kubernetes Basics",
+      "body": [
+        { "table": { "head": ["Object", "Purpose"], "rows": [
+          ["Pod", "Smallest unit: 1+ containers sharing an IP and volumes"], ["Deployment", "Desired replicas + rolling updates (via ReplicaSets)"],
+          ["Service", "Stable virtual IP/DNS for pods: ClusterIP, NodePort, LoadBalancer"], ["Ingress", "HTTP(S) host/path routing into the cluster"],
+          ["ConfigMap / Secret", "Config / sensitive data"], ["Namespace", "Logical separation within a cluster"]
+        ] } },
+        { "table": { "head": ["kubectl", "Does"], "rows": [
+          ["kubectl get pods -o wide", "List pods"], ["kubectl describe pod X", "Details + Events"], ["kubectl logs X --previous", "Logs of the crashed container"],
+          ["kubectl apply -f file.yaml", "Declarative create/update"], ["kubectl scale deploy web --replicas=3", "Scale"], ["kubectl rollout undo deploy web", "Roll back"],
+          ["kubectl exec -it X -- sh", "Shell in a pod"]
+        ] } },
+        { "list": ["**CrashLoopBackOff**: the app keeps crashing, so check the logs.", "**ImagePullBackOff**: bad image name/tag or missing registry credentials.", "**OOMKilled / exit 137**: memory limit exceeded.", "Liveness probe fails → restart. Readiness probe fails → no traffic."] }
+      ]
+    },
+    {
+      "id": "cl-iac", "zone": "cloud", "title": "Terraform & Infrastructure as Code",
+      "body": [
+        { "list": ["**Declarative**: describe the end state; the tool works out the steps.", "Version-controlled, peer-reviewed, repeatable infrastructure.", "Detect **drift** when reality no longer matches the code."] },
+        { "code": "provider \"aws\" { region = \"eu-west-2\" }\n\nresource \"aws_vpc\" \"main\" {\n  cidr_block = \"10.0.0.0/16\"\n}\n\nresource \"aws_subnet\" \"private_a\" {\n  vpc_id     = aws_vpc.main.id\n  cidr_block = \"10.0.11.0/24\"\n}" },
+        { "steps": ["`terraform init`: download providers, configure the backend", "`terraform plan`: preview (+ create, ~ change, - destroy)", "`terraform apply`: make it so", "`terraform destroy`: tear it down"] },
+        { "tip": "State (terraform.tfstate) maps code to real resources. Store it remotely with locking, never commit it, and protect it: it can contain secrets." }
+      ]
+    },
+    {
+      "id": "cl-cloudnet", "zone": "cloud", "title": "Cloud Networking & Service Models",
+      "body": [
+        { "list": ["**VPC/VNet**: your private network in the cloud. Pick a CIDR (e.g. 10.0.0.0/16) and carve subnets per availability zone.", "**Public subnet**: route 0.0.0.0/0 → **Internet Gateway**.", "**Private subnet**: route 0.0.0.0/0 → **NAT Gateway** (outbound only).", "**Security groups**: stateful, per instance/ENI, allow rules only.", "**Network ACLs**: stateless, per subnet, numbered allow AND deny rules.", "Connect on-prem with a site-to-site VPN or a dedicated link (Direct Connect / ExpressRoute)."] },
+        { "table": { "head": ["Model", "You manage", "Example"], "rows": [
+          ["IaaS", "OS, runtime, app, data", "EC2, Azure VMs"], ["PaaS", "App and data", "App Engine, Heroku, Azure App Service"],
+          ["SaaS", "Just use it", "Gmail, Microsoft 365, Salesforce"], ["FaaS (serverless)", "Function code", "AWS Lambda, Azure Functions"]
+        ] } },
+        { "p": "Deployment models: public, private, **hybrid** (on-prem + public), multicloud. Scale **horizontally** (more instances) behind load balancers, across availability zones." }
+      ]
+    }
+  ]
+}
